@@ -12,7 +12,7 @@ public abstract class AbstractEbcdicTermDescription extends AbstractTermDescript
 	/**
 	 * @param termName
 	 */
-	public AbstractEbcdicTermDescription(String termName) {
+	public AbstractEbcdicTermDescription(final String termName) {
 		super(termName);
 	}
 

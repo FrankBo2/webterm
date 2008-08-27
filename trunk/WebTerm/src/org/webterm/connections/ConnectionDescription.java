@@ -37,10 +37,9 @@ public final class ConnectionDescription {
 	/**
 	 * Setter
 	 * 
-	 * @param serverName
-	 *            the serverName to set
+	 * @param serverName the serverName to set
 	 */
-	public void setServerName(String serverName) {
+	public void setServerName(final String serverName) {
 		this.serverName = serverName;
 	}
 
@@ -56,10 +55,9 @@ public final class ConnectionDescription {
 	/**
 	 * Setter
 	 * 
-	 * @param port
-	 *            the port to set
+	 * @param port the port to set
 	 */
-	public void setPort(int port) {
+	public void setPort(final int port) {
 		this.port = port;
 	}
 
@@ -75,10 +73,9 @@ public final class ConnectionDescription {
 	/**
 	 * Setter
 	 * 
-	 * @param termName
-	 *            the termName to set
+	 * @param termName the termName to set
 	 */
-	public void setTermName(String termName) {
+	public void setTermName(final String termName) {
 		this.termName = termName;
 	}
 
@@ -106,20 +103,21 @@ public final class ConnectionDescription {
 	 * @return True if the connection is open succesfully with the host.
 	 */
 	public boolean openConnection() {
-		boolean result = false;
-		if (this.connectionStatus == EnumConnectionStatus.NOT_CREATED
-				|| this.connectionStatus == EnumConnectionStatus.CLOSED) {
-			this.connectionStatus = EnumConnectionStatus.INITIALISATION;
-			try {
-				this.socket = new Socket(this.serverName, this.port);
-				result = true;
-				this.connectionStatus = EnumConnectionStatus.OPEN;
-			} catch (IOException ex) {
-				// FIXME
-				this.connectionStatus = EnumConnectionStatus.NOT_CREATED;
+		synchronized (this.connectionStatus) {
+			boolean result = false; // NOPMD - init result
+			if (this.connectionStatus == EnumConnectionStatus.NOT_CREATED || this.connectionStatus == EnumConnectionStatus.CLOSED) {
+				this.connectionStatus = EnumConnectionStatus.INITIALISATION;
+				try {
+					this.socket = new Socket(this.serverName, this.port);
+					result = true;
+					this.connectionStatus = EnumConnectionStatus.OPEN;
+				} catch (IOException ex) {
+					// FIXME
+					this.connectionStatus = EnumConnectionStatus.NOT_CREATED;
+				}
 			}
+			return result;
 		}
-		return result;
 	}
 
 	/**
@@ -128,17 +126,19 @@ public final class ConnectionDescription {
 	 * @return True if the connection is closed succesfully.
 	 */
 	public boolean closeConnection() {
-		boolean result = false;
-		if (this.connectionStatus == EnumConnectionStatus.OPEN) {
-			this.connectionStatus = EnumConnectionStatus.INITIALISATION;
-			try {
-				this.socket.close();
-				result = true;
-				this.connectionStatus = EnumConnectionStatus.CLOSED;
-			} catch (IOException ex) {
-				this.connectionStatus = EnumConnectionStatus.CLOSED;
+		synchronized (this.connectionStatus) {
+			boolean result = false; // NOPMD - init result
+			if (this.connectionStatus == EnumConnectionStatus.OPEN) {
+				this.connectionStatus = EnumConnectionStatus.INITIALISATION;
+				try {
+					this.socket.close();
+					result = true;
+					this.connectionStatus = EnumConnectionStatus.CLOSED;
+				} catch (IOException ex) {
+					this.connectionStatus = EnumConnectionStatus.CLOSED;
+				}
 			}
+			return result;
 		}
-		return result;
 	}
 }
