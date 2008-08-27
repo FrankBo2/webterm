@@ -10,11 +10,11 @@ import org.webterm.connections.ConnectionDescription;
 public abstract class AbstractTermDescription {
 
 	/** Name of the Terminal. */
-	private String termName;
-	
+	private transient final String termName;
+
 	/** Desciption of ther term connection. */
-	private ConnectionDescription connectionDescription = new ConnectionDescription();
-	
+	private transient final ConnectionDescription connDescription = new ConnectionDescription();
+
 	/**
 	 * Getter
 	 * 
@@ -23,16 +23,16 @@ public abstract class AbstractTermDescription {
 	public final String getTermName() {
 		return this.termName;
 	}
-	
+
 	/**
 	 * Getter
 	 * 
 	 * @return The Connection description.
 	 */
 	public final ConnectionDescription getConnectionDescription() {
-		return this.connectionDescription;
+		return this.connDescription;
 	}
-	
+
 	/**
 	 * Constructor
 	 * 

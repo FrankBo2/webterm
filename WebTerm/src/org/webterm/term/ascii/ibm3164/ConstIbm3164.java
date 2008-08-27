@@ -13,7 +13,7 @@ public final class ConstIbm3164 {
 	private ConstIbm3164() {
 		super();
 	}
-	
+
 	/** Type of Terminal */
 	public static final String TERM_TYPE = "IBM-3164"; //$NON-NLS-1$
 }

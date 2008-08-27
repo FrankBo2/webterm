@@ -14,7 +14,7 @@ public abstract class AbstractAsciiTermDescription extends AbstractTermDescripti
 	 * 
 	 * @param termName
 	 */
-	public AbstractAsciiTermDescription(String termName) {
+	public AbstractAsciiTermDescription(final String termName) {
 		super(termName);
 	}
 

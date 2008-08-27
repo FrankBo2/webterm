@@ -1,12 +1,10 @@
 package org.webterm.term;
 
-
 /**
  * Interface for Term instantiation.
  * 
  * @author charles
- * @param <T>
- *            Type of terminal
+ * @param <T> Type of terminal
  */
 public interface ITermCreator<T extends AbstractTermDescription> {
 

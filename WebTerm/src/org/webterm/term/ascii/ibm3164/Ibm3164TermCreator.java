@@ -7,11 +7,11 @@ import org.webterm.term.ITermCreator;
  * 
  * @author charles
  */
-public class Ibm3164TermCreator implements ITermCreator<Ibm3164TermDescription> {
+public final class Ibm3164TermCreator implements ITermCreator<Ibm3164TermDescription> {
 
 	/** Unic instance of the class */
 	private static final Ibm3164TermCreator instance = new Ibm3164TermCreator();
-	
+
 	/**
 	 * Getter
 	 * 
@@ -20,13 +20,14 @@ public class Ibm3164TermCreator implements ITermCreator<Ibm3164TermDescription> 
 	public static Ibm3164TermCreator getInstance() {
 		return instance;
 	}
+
 	/**
-	 * Constructor. 
+	 * Constructor.
 	 */
 	private Ibm3164TermCreator() {
 		super();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 

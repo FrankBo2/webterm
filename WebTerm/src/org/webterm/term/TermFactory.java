@@ -14,7 +14,19 @@ public final class TermFactory {
 
 	/** Map for registered creators */
 	private transient final static Map<String, ITermCreator<? extends AbstractTermDescription>> creators = new HashMap<String, ITermCreator<? extends AbstractTermDescription>>();
-	
+
+	/** Unic instance of the class */
+	private static final TermFactory instance = new TermFactory();
+
+	/**
+	 * Getter
+	 * 
+	 * @return Unic instance of the class
+	 */
+	public static TermFactory getInstance() {
+		return instance;
+	}
+
 	/**
 	 * Register methode for creators.
 	 * 
@@ -23,18 +35,22 @@ public final class TermFactory {
 	private static void register(final ITermCreator<? extends AbstractTermDescription> creator) {
 		creators.put(creator.getTermType(), creator);
 	}
-	
-	static {
+
+	/**
+	 * Constructor
+	 */
+	private TermFactory() {
+		super();
 		register(Ibm3164TermCreator.getInstance());
 	}
-	
+
 	/**
 	 * Creation methode for term description.
 	 * 
 	 * @param type Terminal type.
 	 * @return A brand new instance of the terminal description if <i>type</i> is found in <i>creators</i>, null otherwidth.
 	 */
-	public static AbstractTermDescription create(final String type) {
+	public AbstractTermDescription create(final String type) {
 		final ITermCreator<? extends AbstractTermDescription> creator = creators.get(type);
 		return creator == null ? null : creator.newInstance();
 	}
