@@ -1,5 +1,6 @@
 package org.webterm.connections;
 
+import java.io.IOException;
 import java.net.Socket;
 
 /**
@@ -17,10 +18,10 @@ public final class ConnectionDescription {
 
 	/** Name of the terminal */
 	private String termName;
-	
+
 	/** status for the connection. */
 	private transient EnumConnectionStatus connectionStatus = EnumConnectionStatus.NOT_CREATED;
-	
+
 	/** Socket for the host connection. */
 	private transient Socket socket;
 
@@ -99,4 +100,45 @@ public final class ConnectionDescription {
 		return this.socket;
 	}
 
+	/**
+	 * Open a connection with the host.
+	 * 
+	 * @return True if the connection is open succesfully with the host.
+	 */
+	public boolean openConnection() {
+		boolean result = false;
+		if (this.connectionStatus == EnumConnectionStatus.NOT_CREATED
+				|| this.connectionStatus == EnumConnectionStatus.CLOSED) {
+			this.connectionStatus = EnumConnectionStatus.INITIALISATION;
+			try {
+				this.socket = new Socket(this.serverName, this.port);
+				result = true;
+				this.connectionStatus = EnumConnectionStatus.OPEN;
+			} catch (IOException ex) {
+				// FIXME
+				this.connectionStatus = EnumConnectionStatus.NOT_CREATED;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Close the connection with the host.
+	 * 
+	 * @return True if the connection is closed succesfully.
+	 */
+	public boolean closeConnection() {
+		boolean result = false;
+		if (this.connectionStatus == EnumConnectionStatus.OPEN) {
+			this.connectionStatus = EnumConnectionStatus.INITIALISATION;
+			try {
+				this.socket.close();
+				result = true;
+				this.connectionStatus = EnumConnectionStatus.CLOSED;
+			} catch (IOException ex) {
+				this.connectionStatus = EnumConnectionStatus.CLOSED;
+			}
+		}
+		return result;
+	}
 }
