@@ -20,6 +20,9 @@ public final class ConstMessages {
 	/** Confirm message : the process is created */
 	public final static String OK_CREATED = "Process created."; //$NON-NLS-1$ //NOPMD - Potentialy long variable name
 
+	/** Confirm message : generic - no error */
+	public final static String OK_GENERIC = "No error."; //$NON-NLS-1$ //NOPMD - Potentialy long variable name
+
 	/** Error message : no such process */
 	public final static String ERR_NO_PROCESS = "Parameter 'pid' is not a valid pid..."; //$NON-NLS-1$ //NOPMD - Potentialy long variable name
 
