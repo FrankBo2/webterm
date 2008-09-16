@@ -1,4 +1,4 @@
-package org.webterm.service.forms;
+package org.webterm.service.forms.query;
 
 import org.webterm.service.AbstractServiceRequest;
 

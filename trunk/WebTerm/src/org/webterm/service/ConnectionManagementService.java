@@ -6,8 +6,8 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.webterm.core.ConstMessages;
 import org.webterm.service.ServiceResult.Status;
-import org.webterm.service.forms.CreateConnectionRequest;
-import org.webterm.service.forms.SimpleConnectionRequest;
+import org.webterm.service.forms.query.CreateConnectionRequest;
+import org.webterm.service.forms.query.SimpleConnectionRequest;
 import org.webterm.service.forms.result.SimpleConnectionResult;
 import org.webterm.term.AbstractTermDescription;
 import org.webterm.term.TermFactory;
@@ -161,7 +161,7 @@ public final class ConnectionManagementService {
 						result.setProcess(term);
 					} else {
 						result.setStatus(Status.ERROR);
-						result.setMessage(ConstMessages.CONNECTION_NOT_YOURS);
+						result.setMessage(ConstMessages.CONN_NOT_YOURS);
 					}
 				}
 			}

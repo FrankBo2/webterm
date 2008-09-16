@@ -21,5 +21,5 @@ public final class ConstMessages {
 	public final static String NO_PARAMETER_PID = "Parameter 'pid' needed..."; //$NON-NLS-1$
 	
 	/** Error message : the process asked is not yours */
-	public final static String CONNECTION_NOT_YOURS = "The process '$pid' is not yours..."; //$NON-NLS-1$
+	public final static String CONN_NOT_YOURS = "The process is not yours..."; //$NON-NLS-1$
 }
