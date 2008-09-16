@@ -5,7 +5,7 @@ package org.webterm.service;
  * 
  * @author charles
  */
-public abstract class ServiceResult { // NOPMD - no abstract methode
+public abstract class AbstractServiceResult { // NOPMD - no abstract methode
 
 	/**
 	 * Enum for the result Status.
