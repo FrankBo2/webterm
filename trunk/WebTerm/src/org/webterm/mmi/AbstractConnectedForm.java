@@ -5,7 +5,7 @@ package org.webterm.mmi;
  * 
  * @author charles
  */
-public abstract class AbstractConnectedForm {
+public abstract class AbstractConnectedForm { // NOPMD - no abstract method
 
 	/** Id of the Connection (SessionId) */
 	private String connectionId;
@@ -27,5 +27,5 @@ public abstract class AbstractConnectedForm {
 	public void setConnectionId(final String connectionId) {
 		this.connectionId = connectionId;
 	}
-	
+
 }
