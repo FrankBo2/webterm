@@ -1,6 +1,6 @@
 package org.webterm.service.forms.result;
 
-import org.webterm.service.ServiceResult;
+import org.webterm.service.AbstractServiceResult;
 import org.webterm.term.AbstractTermDescription;
 
 /**
@@ -8,7 +8,7 @@ import org.webterm.term.AbstractTermDescription;
  * 
  * @author charles
  */
-public class SimpleConnectionResult extends ServiceResult {
+public class SimpleConnectionResult extends AbstractServiceResult {
 
 	/** requested process */
 	private AbstractTermDescription process;

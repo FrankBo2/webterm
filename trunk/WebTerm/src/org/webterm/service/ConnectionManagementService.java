@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.webterm.core.ConstMessages;
-import org.webterm.service.ServiceResult.Status;
+import org.webterm.service.AbstractServiceResult.Status;
 import org.webterm.service.forms.query.CreateConnectionRequest;
 import org.webterm.service.forms.query.SimpleConnectionRequest;
 import org.webterm.service.forms.result.SimpleConnectionResult;
@@ -41,7 +41,7 @@ public final class ConnectionManagementService {
 	/** list of all process */
 	private Map<Long, AbstractTermDescription> processList = new HashMap<Long, AbstractTermDescription>();
 
-	public void getConnexionList(final AbstractServiceRequest params, final ServiceResult result) {
+	public void getConnexionList(final AbstractServiceRequest params, final AbstractServiceResult result) {
 		isValidUser(params, result);
 
 		if (result.getStatus() == Status.OK) {
@@ -67,24 +67,28 @@ public final class ConnectionManagementService {
 		}
 	}
 
-	public void createTerm(final CreateConnectionRequest params, final ServiceResult result) {
+	/**
+	 * Methode to create a term connection.
+	 * 
+	 * @param params Request params
+	 * @param result Request result
+	 */
+	public void createTerm(final CreateConnectionRequest params, final SimpleConnectionResult result) {
 		isValidUser(params, result);
 
 		if (result.getStatus() == Status.OK) {
-			final String userName = params.getUserName();
-
-			AbstractTermDescription term = TermFactory.getInstance().create(params.getType());
-			if (term == null) {
+			final AbstractTermDescription process = TermFactory.getInstance().create(params.getType());
+			if (process == null) {
 				result.setStatus(Status.ERROR);
-				result.setMessage("Unsupported type");
+				result.setMessage(ConstMessages.ERR_UNSUPPORTED_TYPE);
 			} else {
-				final Long pid = term.getPid();
-				processList.put(pid, term);
-				term.getConnectionDescription().setServerName(params.getServerName());
-				term.getConnectionDescription().setPort(params.getServerPort());
-				// term.getConnectionDescription().
-
-				result.setMessage("\r\n" + "\t\t<user>" + userName + "</user>\r\n" + "\t\t<pid>" + pid.toString() + "</pid>\r\n\t");
+				final Long pid = process.getPid();
+				this.processList.put(pid, process);
+				process.getConnectionDescription().setServerName(params.getServerName());
+				process.getConnectionDescription().setPort(params.getServerPort());
+				// process.getConnectionDescription().
+				result.setProcess(process);
+				result.setMessage("Process created.");
 			}
 		}
 	}
@@ -95,7 +99,7 @@ public final class ConnectionManagementService {
 	 * @param params Request params
 	 * @param result Request result
 	 */
-	public void isValidUser(final AbstractServiceRequest params, final ServiceResult result) {
+	public void isValidUser(final AbstractServiceRequest params, final AbstractServiceResult result) {
 		result.setStatus(Status.ERROR);
 		result.setMessage("Parameters 'userName' and 'userPassword' needed...");
 

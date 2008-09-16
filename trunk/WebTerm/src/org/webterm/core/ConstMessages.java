@@ -22,4 +22,7 @@ public final class ConstMessages {
 	
 	/** Error message : the process asked is not yours */
 	public final static String CONN_NOT_YOURS = "The process is not yours..."; //$NON-NLS-1$
+	
+	/** Error message : the term type is not supported */
+	public final static String ERR_UNSUPPORTED_TYPE = "Unsupported type"; //$NON-NLS-1$
 }
