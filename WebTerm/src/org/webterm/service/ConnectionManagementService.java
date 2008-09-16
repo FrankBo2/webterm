@@ -88,7 +88,7 @@ public final class ConnectionManagementService {
 				process.getConnectionDescription().setPort(params.getServerPort());
 				// process.getConnectionDescription().
 				result.setProcess(process);
-				result.setMessage("Process created.");
+				result.setMessage(ConstMessages.OK_CREATED);
 			}
 		}
 	}
@@ -100,20 +100,21 @@ public final class ConnectionManagementService {
 	 * @param result Request result
 	 */
 	public void isValidUser(final AbstractServiceRequest params, final AbstractServiceResult result) {
-		result.setStatus(Status.ERROR);
-		result.setMessage("Parameters 'userName' and 'userPassword' needed...");
-
 		final String userName = params.getUserName();
 		final String userPassword = params.getUserPassword();
 
 		if (StringUtils.isNotEmpty(userName) && StringUtils.isNotEmpty(userPassword)) {
-
-			if (userName.equalsIgnoreCase("charles") && userPassword.equals("Ker%29H")) {
+			//FIXME auth methode
+			if ("charles".equalsIgnoreCase(userName) && "Ker%29H".equals(userPassword)) { //$NON-NLS-1$ //$NON-NLS-2$
 				result.setStatus(Status.OK);
-				result.setMessage("\r\n" + "\t\t<user>" + userName + "</user>\r\n\t");
+				result.setMessage(ConstMessages.OK_AUTHENTICATED);
 			} else {
-				result.setMessage("Invalid login/password...");
+				result.setStatus(Status.ERROR);
+				result.setMessage(ConstMessages.ERR_BAD_AUTH);
 			}
+		} else {
+			result.setStatus(Status.ERROR);
+			result.setMessage(ConstMessages.ERR_NO_PARAMETER_USR_PWD);
 		}
 	}
 
@@ -129,7 +130,7 @@ public final class ConnectionManagementService {
 			final AbstractTermDescription process = result.getProcess();
 			if (process == null) {
 				result.setStatus(Status.ERROR);
-				result.setMessage(ConstMessages.NO_PROCESS);
+				result.setMessage(ConstMessages.ERR_NO_PROCESS);
 			} else {
 				// FIXME close the connection
 				// result = $this->processList[$pid]->close();
@@ -150,22 +151,22 @@ public final class ConnectionManagementService {
 	private void getConnection(final SimpleConnectionRequest params, final SimpleConnectionResult result) {
 		isValidUser(params, result);
 		if (result.getStatus() == Status.OK) {
-			final String userName = params.getUserName();
 			final Long pid = Long.valueOf(params.getPid());
 			if (pid == null) {
 				result.setStatus(Status.ERROR);
-				result.setMessage(ConstMessages.NO_PARAMETER_PID);
+				result.setMessage(ConstMessages.ERR_NO_PARAMETER_PID);
 			} else {
 				final AbstractTermDescription term = this.processList.get(pid);
 				if (term == null) {
 					result.setStatus(Status.ERROR);
-					result.setMessage(ConstMessages.NO_PROCESS);
+					result.setMessage(ConstMessages.ERR_NO_PROCESS);
 				} else {
+					final String userName = params.getUserName();
 					if (term.getOwner().equalsIgnoreCase(userName)) {
 						result.setProcess(term);
 					} else {
 						result.setStatus(Status.ERROR);
-						result.setMessage(ConstMessages.CONN_NOT_YOURS);
+						result.setMessage(ConstMessages.ERR_CONN_NOT_YOURS);
 					}
 				}
 			}
@@ -184,7 +185,7 @@ public final class ConnectionManagementService {
 			final AbstractTermDescription process = result.getProcess();
 			if (process == null) {
 				result.setStatus(Status.ERROR);
-				result.setMessage(ConstMessages.NO_PROCESS);
+				result.setMessage(ConstMessages.ERR_NO_PROCESS);
 			} else {
 				// FIXME close the process
 				// result = $this->processList[$pid]->close();
@@ -207,7 +208,7 @@ public final class ConnectionManagementService {
 			final AbstractTermDescription process = result.getProcess();
 			if (process == null) {
 				result.setStatus(Status.ERROR);
-				result.setMessage(ConstMessages.NO_PROCESS);
+				result.setMessage(ConstMessages.ERR_NO_PROCESS);
 			} else {
 				// FIXME get the screen
 				// result = $this->processList[$pid]->close();
