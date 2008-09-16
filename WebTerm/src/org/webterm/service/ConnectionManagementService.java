@@ -8,6 +8,7 @@ import org.webterm.core.ConstMessages;
 import org.webterm.service.AbstractServiceResult.Status;
 import org.webterm.service.forms.query.CreateConnectionRequest;
 import org.webterm.service.forms.query.SimpleConnectionRequest;
+import org.webterm.service.forms.result.ConnectionListResult;
 import org.webterm.service.forms.result.SimpleConnectionResult;
 import org.webterm.term.AbstractTermDescription;
 import org.webterm.term.TermFactory;
@@ -39,31 +40,30 @@ public final class ConnectionManagementService {
 	}
 
 	/** list of all process */
-	private Map<Long, AbstractTermDescription> processList = new HashMap<Long, AbstractTermDescription>();
+	private transient final Map<Long, AbstractTermDescription> processList = new HashMap<Long, AbstractTermDescription>();
 
-	public void getConnexionList(final AbstractServiceRequest params, final AbstractServiceResult result) {
-		isValidUser(params, result);
+	/**
+	 * Methode to get the list of connections from the user.
+	 * 
+	 * @param params Request params
+	 * @param result Request result
+	 */
+	public void getConnexionList(final AbstractServiceRequest params, final ConnectionListResult result) {
+		checkUser(params, result);
 
 		if (result.getStatus() == Status.OK) {
-			// $userName = (string) $params->userName;
-			final StringBuilder str = new StringBuilder();
-			str.append("\r\n");
-			str.append("\t\t<user>$userName</user>\r\n");
-			str.append("\t\t<connexionList>\r\n");
-
-			for (final AbstractTermDescription process : processList.values()) {
-				// if (process->owner == $userName) {
-				str.append("\t\t\t<connexion>\r\n");
-				str.append("\t\t\t\t<pid>" + process.getPid().toString() + "</pid>\r\n");
-				str.append("\t\t\t\t<status>" + process.getConnectionDescription().getConnectionStatus() + "</status>\r\n");
-				str.append("\t\t\t\t<server>" + process.getConnectionDescription().getServerName() + "</server>\r\n");
-				str.append("\t\t\t\t<port>" + process.getConnectionDescription().getPort() + "</port>\r\n");
-				str.append("\t\t\t</connexion>\r\n");
-				// }
+			final String userName = params.getUserName();
+			if (StringUtils.isEmpty(userName)) {
+				result.setStatus(Status.ERROR);
+				result.setMessage(ConstMessages.ERR_NO_PARAMETER_USR_PWD);
+			} else {
+				for (final AbstractTermDescription process : this.processList.values()) {
+					if (userName.equalsIgnoreCase(process.getOwner())){
+						result.getProcessList().add(process);
+					}
+				}
+				result.setMessage(ConstMessages.OK_GENERIC);
 			}
-
-			str.append("\t\t</connexionList>\r\n\t");
-			result.setMessage(str.toString());
 		}
 	}
 
@@ -74,7 +74,7 @@ public final class ConnectionManagementService {
 	 * @param result Request result
 	 */
 	public void createTerm(final CreateConnectionRequest params, final SimpleConnectionResult result) {
-		isValidUser(params, result);
+		checkUser(params, result);
 
 		if (result.getStatus() == Status.OK) {
 			final AbstractTermDescription process = TermFactory.getInstance().create(params.getType());
@@ -99,7 +99,7 @@ public final class ConnectionManagementService {
 	 * @param params Request params
 	 * @param result Request result
 	 */
-	public void isValidUser(final AbstractServiceRequest params, final AbstractServiceResult result) {
+	public void checkUser(final AbstractServiceRequest params, final AbstractServiceResult result) {
 		final String userName = params.getUserName();
 		final String userPassword = params.getUserPassword();
 
@@ -149,7 +149,7 @@ public final class ConnectionManagementService {
 	 * @param result Request result
 	 */
 	private void getConnection(final SimpleConnectionRequest params, final SimpleConnectionResult result) {
-		isValidUser(params, result);
+		checkUser(params, result);
 		if (result.getStatus() == Status.OK) {
 			final Long pid = Long.valueOf(params.getPid());
 			if (pid == null) {
