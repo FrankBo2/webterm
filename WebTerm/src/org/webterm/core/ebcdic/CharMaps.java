@@ -85,7 +85,7 @@ public final class CharMaps {
 	}
 
 	/**
-	 * Register methode for char maps
+	 * Register method for char maps
 	 * 
 	 * @param charmap charmap to register
 	 */
@@ -94,9 +94,9 @@ public final class CharMaps {
 	}
 
 	/**
-	 * Methode to convert client String
+	 * Method to convert client String
 	 * 
-	 * @param map CharMap for convertion
+	 * @param map CharMap for conversion
 	 * @param string String to convert
 	 * @return String in the host char encoding
 	 */
@@ -111,9 +111,9 @@ public final class CharMaps {
 	}
 
 	/**
-	 * Methode to convert host String
+	 * Method to convert host String
 	 * 
-	 * @param map CharMap for convertion
+	 * @param map CharMap for conversion
 	 * @param string String to convert
 	 * @return String in the client char encoding
 	 */
