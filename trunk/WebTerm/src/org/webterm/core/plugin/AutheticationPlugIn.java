@@ -6,8 +6,6 @@ package org.webterm.core.plugin;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.action.PlugIn;
 import org.apache.struts.config.ModuleConfig;
@@ -26,7 +24,7 @@ public final class AutheticationPlugIn implements PlugIn {
 
 	/** Map for registered authentication provider */
 	private transient final Map<String, IAuthentication> map = new HashMap<String, IAuthentication>();
-	
+
 	/**
 	 * Constructor
 	 */
@@ -44,6 +42,7 @@ public final class AutheticationPlugIn implements PlugIn {
 	private void register(final IAuthentication provider) {
 		this.map.put(provider.getAuthMethod(), provider);
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -60,7 +59,7 @@ public final class AutheticationPlugIn implements PlugIn {
 	 * @see org.apache.struts.action.PlugIn#init(org.apache.struts.action.ActionServlet, org.apache.struts.config.ModuleConfig)
 	 */
 	@Override
-	public void init(final ActionServlet arg0, final ModuleConfig arg1) throws ServletException {
+	public void init(final ActionServlet arg0, final ModuleConfig arg1) {
 		AuthenticationProvider.getInstance().setAuthProvider(this.map.get(ConstConfiguration.AUTHENTICATION_METHODE));
 	}
 }

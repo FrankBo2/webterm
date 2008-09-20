@@ -24,6 +24,6 @@ public final class Runner {
 	 * Test Method.
 	 */
 	public void executeTest() {
-		JUnitCore.runClasses(TestAuth.class);
+		JUnitCore.main("org.webterm.test.TestAuth"); //$NON-NLS-1$
 	}
 }

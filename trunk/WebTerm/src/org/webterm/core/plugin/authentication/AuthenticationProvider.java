@@ -42,7 +42,9 @@ public final class AuthenticationProvider {
 			this.authProvider.destroy();
 		}
 		this.authProvider = authProvider;
-		this.authProvider.init();
+		if (authProvider != null) {
+			this.authProvider.init();
+		}
 	}
 	
 	
