@@ -1,11 +1,11 @@
-/**
- * 
- */
 package org.webterm.core.plugin.authentication;
 
-import java.util.List;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.webterm.core.configuration.ConfigurationReader;
 
 /**
  * Provider for file authentication
@@ -18,10 +18,13 @@ public final class FileAuthentication implements IAuthentication {
 	private static final Logger LOG = Logger.getLogger(FileAuthentication.class);
 
 	/** Authentication method name */
-	private static final String AUTH_METHOD = "FILE"; //$NON-NLS-1$
+	private static final String AUTH_METHOD = "file"; //$NON-NLS-1$
+
+	/** Name of the configuration file in the ApplicationConfiguration.properties */
+	private static final String CONFIG_FILE_NAME = "AUTHENTICATION.FILE.FILE_NAME"; //$NON-NLS-1$
 
 	/** Use definitions */
-	private List<?> userDefinition;
+	private transient ResourceBundle userDb = null;
 
 	/** Unique instance. */
 	private static final FileAuthentication instance = new FileAuthentication();
@@ -61,6 +64,12 @@ public final class FileAuthentication implements IAuthentication {
 	public void init() {
 		LOG.info("Initializing File authentication..."); //$NON-NLS-1$
 
+		final String configFile = ConfigurationReader.getInstance().getApplicationProperty(CONFIG_FILE_NAME);
+		try {
+			this.userDb = ResourceBundle.getBundle(configFile);
+		} catch (final MissingResourceException ex) {
+			LOG.fatal(ex, ex);
+		}
 	}
 
 	/*
@@ -70,7 +79,10 @@ public final class FileAuthentication implements IAuthentication {
 	 */
 	@Override
 	public boolean isValidUser(final String user, final String passwd) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean result = false; // NOPMD - init
+		if (this.userDb != null) {
+			result = StringUtils.trimToEmpty(this.userDb.getString(user)).equals(passwd);
+		}
+		return result;
 	}
 }
