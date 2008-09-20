@@ -1,4 +1,4 @@
-package org.webterm.mmi;
+package org.webterm.ui;
 
 import org.apache.struts.action.ActionForm;
 
