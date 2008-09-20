@@ -1,11 +1,16 @@
 package org.webterm.mmi;
 
+import org.apache.struts.action.ActionForm;
+
 /**
- * Form for the logon action.
+ * Form for the log-on action.
  * 
  * @author charles
  */
-public class LogonForm {
+public class LogonForm extends ActionForm {
+
+	/** Class serial number */
+	private static final long serialVersionUID = 1L;
 
 	/** login of the user */
 	private String login;
