@@ -780,10 +780,6 @@
             <ruleset>String and StringBuffer Rules</ruleset>
         </rule>
         <rule>
-            <name>UnnecessaryConstructor</name>
-            <ruleset>Controversial Rules</ruleset>
-        </rule>
-        <rule>
             <name>UnnecessaryConversionTemporary</name>
             <ruleset>Basic Rules</ruleset>
         </rule>
