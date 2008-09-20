@@ -3,13 +3,14 @@ package org.webterm.core.plugin.authentication;
 import java.util.Hashtable;
 
 import javax.naming.Context;
-import javax.naming.NamingEnumeration;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.webterm.core.ConstString;
 import org.webterm.core.configuration.ConfigurationReader;
 
 /**
@@ -105,7 +106,7 @@ public final class LdapAuthentication implements IAuthentication {
 			this.baseDn = config.getApplicationProperty(CONFIG_BASE_DN);
 			this.attrUser = config.getApplicationProperty(CONFIG_ATTR_USER);
 			this.attrPwd = config.getApplicationProperty(CONFIG_ATTR_PWD);
-			final Hashtable<String, String> ldapEnv = new Hashtable<String, String>(); //NOPMD - HashTable is needed
+			final Hashtable<String, String> ldapEnv = new Hashtable<String, String>(); // NOPMD - HashTable is needed
 			ldapEnv.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory"); //$NON-NLS-1$
 			ldapEnv.put(Context.PROVIDER_URL, "ldap://" + serverName + ":" + serverPort); //$NON-NLS-1$ //$NON-NLS-2$
 			ldapEnv.put(Context.SECURITY_AUTHENTICATION, "simple");//$NON-NLS-1$
@@ -125,6 +126,7 @@ public final class LdapAuthentication implements IAuthentication {
 	@Override
 	public boolean isValidUser(final String user, final String passwd) {
 		// TODO Auto-generated method stub
+		fetch(user);
 		return false;
 	}
 
@@ -132,24 +134,26 @@ public final class LdapAuthentication implements IAuthentication {
 	 * Attribute reader
 	 * 
 	 * @param username
-	 * @return Attributes associated with the login.
+	 * @return Attribute password associated with the login.
 	 */
-	public Attributes fetch(final String username) {
-		Attributes attributes = null; //NOPMD - init
-		try {
-			final DirContext obj = (DirContext) this.ldapContext.lookup(this.attrUser + "=" + username + "," + this.baseDn); //$NON-NLS-1$ //$NON-NLS-2$
-			attributes = obj.getAttributes(this.attrPwd);
-			for (final NamingEnumeration<? extends Attribute> ae = attributes.getAll(); ae.hasMoreElements();) {
-				final Attribute attr = ae.next();
-				final String attrId = attr.getID(); //NOPMD
-				for (final NamingEnumeration<?> vals = attr.getAll(); vals.hasMore();) {
-					final String thing = vals.next().toString();
-					LOG.info(attrId + ":" + thing); //$NON-NLS-1$
+	public Attribute fetch(final String username) {
+		Attribute pwd = null; // NOPMD - init
+		if (StringUtils.isNotBlank(username)) {
+			try {
+				final DirContext obj = (DirContext) this.ldapContext.lookup(this.attrUser + "=" + username + "," + this.baseDn); //$NON-NLS-1$ //$NON-NLS-2$
+				final Attributes attributes = obj.getAttributes(ConstString.EMPTY);
+				pwd = attributes.get(this.attrPwd);
+				final byte[] password = (byte[]) pwd.get(0);
+				LOG.info(pwd.toString());
+				final StringBuilder str = new StringBuilder();
+				for (final byte ch : password) {
+					str.append((char) ch);
 				}
+				LOG.info(str.toString());
+			} catch (Exception ex) {
+				LOG.error(ex, ex);
 			}
-		} catch (Exception ex) {
-			LOG.error(ex, ex);
 		}
-		return attributes;
+		return pwd;
 	}
 }
