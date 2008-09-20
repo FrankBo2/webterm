@@ -8,7 +8,7 @@ import org.webterm.service.ConnectionPidHelper;
  * 
  * @author charles
  */
-public abstract class AbstractTermDescription { // NOPMD - no abstract methode
+public abstract class AbstractTermDescription { // NOPMD - no abstract method
 
 	/** PID of the the connection */
 	private transient final Long pid;
@@ -19,7 +19,7 @@ public abstract class AbstractTermDescription { // NOPMD - no abstract methode
 	/** Name of the Terminal. */
 	private transient final String termName;
 
-	/** Desciption of ther term connection. */
+	/** Description of the term connection. */
 	private transient final ConnectionDescription connDescription = new ConnectionDescription();
 
 	/**
