@@ -51,7 +51,7 @@ public final class AutheticationPlugIn implements PlugIn {
 	 */
 	@Override
 	public void destroy() {
-		//Nothing to do
+		AuthenticationProvider.getInstance().setAuthProvider(null);
 	}
 
 	/*

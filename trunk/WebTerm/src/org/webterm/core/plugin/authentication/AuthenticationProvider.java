@@ -38,6 +38,9 @@ public final class AuthenticationProvider {
 	 * @param authProvider Authentication provider
 	 */
 	public void setAuthProvider(final IAuthentication authProvider) {
+		if (this.authProvider != null) {
+			this.authProvider.destroy();
+		}
 		this.authProvider = authProvider;
 		this.authProvider.init();
 	}

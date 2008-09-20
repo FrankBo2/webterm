@@ -210,12 +210,12 @@ public final class LdapAuthentication implements IAuthentication {
 
 		final Attribute pwd = fetch(user);
 		if ((pwd != null) && (this.checkMethode != null)) {
-		try {
-			final byte[] pwdAttr = (byte[]) pwd.get(0);
-			result = this.checkMethode.isValidPassword(passwd, pwdAttr);
-		} catch (final Exception ex) {
-			LOG.error(ex, ex);
-		}
+			try {
+				final byte[] pwdAttr = (byte[]) pwd.get(0);
+				result = this.checkMethode.isValidPassword(passwd, pwdAttr);
+			} catch (final Exception ex) {
+				LOG.error(ex, ex);
+			}
 		}
 		return result;
 	}
@@ -238,5 +238,19 @@ public final class LdapAuthentication implements IAuthentication {
 			}
 		}
 		return pwd;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.webterm.core.plugin.authentication.IAuthentication#destroy()
+	 */
+	@Override
+	public void destroy() {
+		try {
+			this.ldapContext.close();
+		} catch (final Exception ex) {
+			LOG.error(ex, ex);
+		}
 	}
 }

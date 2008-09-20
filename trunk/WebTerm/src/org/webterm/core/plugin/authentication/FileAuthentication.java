@@ -89,4 +89,15 @@ public final class FileAuthentication implements IAuthentication {
 		}
 		return result;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.webterm.core.plugin.authentication.IAuthentication#destroy()
+	 */
+	@Override
+	public void destroy() {
+		// Nothing to do
+	}
+
 }

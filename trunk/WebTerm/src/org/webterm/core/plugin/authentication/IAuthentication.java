@@ -48,6 +48,11 @@ public interface IAuthentication {
 	void init();
 	
 	/**
+	 * Destruction method.
+	 */
+	void destroy();
+	
+	/**
 	 * Authentication method.
 	 * 
 	 * @param user User name.
