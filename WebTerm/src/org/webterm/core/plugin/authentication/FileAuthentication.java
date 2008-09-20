@@ -81,7 +81,11 @@ public final class FileAuthentication implements IAuthentication {
 	public boolean isValidUser(final String user, final String passwd) {
 		boolean result = false; // NOPMD - init
 		if (this.userDb != null) {
-			result = StringUtils.trimToEmpty(this.userDb.getString(user)).equals(passwd);
+			try {
+				result = StringUtils.trimToEmpty(this.userDb.getString(user)).equals(passwd);
+			} catch (final Exception ex) {
+				LOG.debug(ex, ex);
+			}
 		}
 		return result;
 	}
