@@ -19,7 +19,7 @@ public final class TestAuth {
 		try {
 			final AutheticationPlugIn plugin = new AutheticationPlugIn();
 			plugin.init(null, null);
-			System.out.println(AuthenticationProvider.getInstance().isValidUser("afendt", "#CristAl!")); //$NON-NLS-1$ //$NON-NLS-2$ //NOPMD
+			System.out.println(AuthenticationProvider.getInstance().isValidUser("charles", "charles")); //$NON-NLS-1$ //$NON-NLS-2$ //NOPMD
 			System.out.println(AuthenticationProvider.getInstance().isValidUser("charles", "")); //$NON-NLS-1$ //$NON-NLS-2$ //NOPMD
 			System.out.println(AuthenticationProvider.getInstance().isValidUser("", "")); //$NON-NLS-1$ //$NON-NLS-2$ //NOPMD
 			plugin.destroy();
