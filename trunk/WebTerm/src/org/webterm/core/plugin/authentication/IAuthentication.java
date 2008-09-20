@@ -10,6 +10,31 @@ package org.webterm.core.plugin.authentication;
  */
 public interface IAuthentication {
 
+	/**
+	 * Interface for password checking
+	 * 
+	 * @author charles
+	 */
+	interface IAuthenticationCheck {
+		
+		/**
+		 * Password check method.
+		 * 
+		 * @param passwd User password offer.
+		 * @param pwdAttr Password attribute in the database.
+		 * @return TRUE if the password match.
+		 */
+		boolean isValidPassword(final String passwd, byte[] pwdAttr);
+		
+		/** 
+		 * Getter
+		 * 
+		 * @return Password encoding method.
+		 */
+		String getEncodeMethod();
+		
+	}
+	
 	/** 
 	 * Getter
 	 * 

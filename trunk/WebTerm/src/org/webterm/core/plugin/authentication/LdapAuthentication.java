@@ -1,6 +1,8 @@
 package org.webterm.core.plugin.authentication;
 
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.directory.Attribute;
@@ -20,35 +22,96 @@ import org.webterm.core.configuration.ConfigurationReader;
  */
 public final class LdapAuthentication implements IAuthentication {
 
+	/**
+	 * Method for plain password check
+	 * 
+	 * @author charles
+	 */
+	protected static class PlainPasswordCheck implements IAuthenticationCheck {
+
+		/** PLAIN method */
+		private static final String ENCODE_METHOD = "plain"; //$NON-NLS-1$
+
+		/** Unique instance. */
+		private static final PlainPasswordCheck inst = new PlainPasswordCheck();
+
+		/**
+		 * Getter
+		 * 
+		 * @return Unique instance.
+		 */
+		public static PlainPasswordCheck getInstance() {
+			return inst;
+		}
+
+		/**
+		 * Constructor
+		 */
+		private PlainPasswordCheck() {
+			super();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.webterm.core.plugin.authentication.IAuthentication.IAuthenticationCheck#getEncodeMethod()
+		 */
+		@Override
+		public String getEncodeMethod() {
+			return ENCODE_METHOD;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.webterm.core.plugin.authentication.IAuthentication.IAuthenticationCheck#isValidPassword(java.lang.String, byte[])
+		 */
+		@Override
+		public boolean isValidPassword(final String passwd, final byte[] pwdAttr) {
+			final StringBuilder str = new StringBuilder();
+			for (final byte ch : pwdAttr) {
+				str.append((char) ch);
+			}
+			return str.toString().equals(passwd);
+		}
+
+	}
+
 	/** Logger */
 	private static final Logger LOG = Logger.getLogger(LdapAuthentication.class);
 
 	/** Authentication method name */
 	private static final String AUTH_METHOD = "ldap"; //$NON-NLS-1$
 
-	/** Name of the configuration file in the ApplicationConfiguration.properties */
+	/** Server name in the ApplicationConfiguration.properties */
 	private static final String CONFIG_SERVER_NAME = "AUTHENTICATION.LDAP.SERVER_NAME"; //$NON-NLS-1$
 
-	/** Name of the configuration file in the ApplicationConfiguration.properties */
+	/** Server port in the ApplicationConfiguration.properties */
 	private static final String CONFIG_SERVER_PORT = "AUTHENTICATION.LDAP.SERVER_PORT"; //$NON-NLS-1$
 
-	/** Name of the configuration file in the ApplicationConfiguration.properties */
+	/** Bind DN in the ApplicationConfiguration.properties */
 	private static final String CONFIG_BIND_DN = "AUTHENTICATION.LDAP.BIND_DN"; //$NON-NLS-1$
 
-	/** Name of the configuration file in the ApplicationConfiguration.properties */
+	/** Bind password in the ApplicationConfiguration.properties */
 	private static final String CONFIG_BIND_PWD = "AUTHENTICATION.LDAP.BIND_PWD"; //$NON-NLS-1$
 
-	/** Name of the configuration file in the ApplicationConfiguration.properties */
+	/** Base DN in the ApplicationConfiguration.properties */
 	private static final String CONFIG_BASE_DN = "AUTHENTICATION.LDAP.BASE_DN"; //$NON-NLS-1$
 
-	/** Name of the configuration file in the ApplicationConfiguration.properties */
+	/** Attribute for the user login in the ApplicationConfiguration.properties */
 	private static final String CONFIG_ATTR_USER = "AUTHENTICATION.LDAP.ATTR_USER"; //$NON-NLS-1$
 
-	/** Name of the configuration file in the ApplicationConfiguration.properties */
+	/** Attribute for the user password in the ApplicationConfiguration.properties */
 	private static final String CONFIG_ATTR_PWD = "AUTHENTICATION.LDAP.ATTR_PWD"; //$NON-NLS-1$
+
+	/** Encoding method name in the ApplicationConfiguration.properties */
+	private static final String CONFIG_PASSWORD_ENCODE = "AUTHENTICATION.LDAP.PASSWORD_ENCODE"; //$NON-NLS-1$
 
 	/** LDAP Connection */
 	private transient DirContext ldapContext;
+
+	/** Password check method map */
+	private transient final Map<String, IAuthenticationCheck> map = new HashMap<String, IAuthenticationCheck>();
 
 	/** base DN for user search */
 	private transient String baseDn;
@@ -58,6 +121,9 @@ public final class LdapAuthentication implements IAuthentication {
 
 	/** Attribute for password search */
 	private transient String attrPwd;
+
+	/** class for password check */
+	private transient IAuthenticationCheck checkMethode = null;
 
 	/** Unique instance. */
 	private static final LdapAuthentication instance = new LdapAuthentication();
@@ -76,6 +142,16 @@ public final class LdapAuthentication implements IAuthentication {
 	 */
 	private LdapAuthentication() {
 		super();
+		register(PlainPasswordCheck.getInstance());
+	}
+
+	/**
+	 * Register method
+	 * 
+	 * @param mth Method
+	 */
+	private void register(final IAuthenticationCheck mth) {
+		this.map.put(mth.getEncodeMethod(), mth);
 	}
 
 	/*
@@ -106,6 +182,11 @@ public final class LdapAuthentication implements IAuthentication {
 			this.baseDn = config.getApplicationProperty(CONFIG_BASE_DN);
 			this.attrUser = config.getApplicationProperty(CONFIG_ATTR_USER);
 			this.attrPwd = config.getApplicationProperty(CONFIG_ATTR_PWD);
+			this.checkMethode = this.map.get(config.getApplicationProperty(CONFIG_PASSWORD_ENCODE));
+			if (this.checkMethode == null) {
+				LOG.fatal("unknown method: " + config.getApplicationProperty(CONFIG_PASSWORD_ENCODE)); //$NON-NLS-1$
+			}
+
 			final Hashtable<String, String> ldapEnv = new Hashtable<String, String>(); // NOPMD - HashTable is needed
 			ldapEnv.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory"); //$NON-NLS-1$
 			ldapEnv.put(Context.PROVIDER_URL, "ldap://" + serverName + ":" + serverPort); //$NON-NLS-1$ //$NON-NLS-2$
@@ -125,9 +206,18 @@ public final class LdapAuthentication implements IAuthentication {
 	 */
 	@Override
 	public boolean isValidUser(final String user, final String passwd) {
-		// TODO Auto-generated method stub
-		fetch(user);
-		return false;
+		boolean result = false; // NOPMD - init
+
+		final Attribute pwd = fetch(user);
+		if ((pwd != null) && (this.checkMethode != null)) {
+		try {
+			final byte[] pwdAttr = (byte[]) pwd.get(0);
+			result = this.checkMethode.isValidPassword(passwd, pwdAttr);
+		} catch (final Exception ex) {
+			LOG.error(ex, ex);
+		}
+		}
+		return result;
 	}
 
 	/**
@@ -143,13 +233,6 @@ public final class LdapAuthentication implements IAuthentication {
 				final DirContext obj = (DirContext) this.ldapContext.lookup(this.attrUser + "=" + username + "," + this.baseDn); //$NON-NLS-1$ //$NON-NLS-2$
 				final Attributes attributes = obj.getAttributes(ConstString.EMPTY);
 				pwd = attributes.get(this.attrPwd);
-				final byte[] password = (byte[]) pwd.get(0);
-				LOG.info(pwd.toString());
-				final StringBuilder str = new StringBuilder();
-				for (final byte ch : password) {
-					str.append((char) ch);
-				}
-				LOG.info(str.toString());
 			} catch (Exception ex) {
 				LOG.error(ex, ex);
 			}
