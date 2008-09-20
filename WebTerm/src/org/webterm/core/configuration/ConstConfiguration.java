@@ -1,7 +1,5 @@
 package org.webterm.core.configuration;
 
-import org.webterm.core.ConstString;
-
 /**
  * Configuration reader
  * 
@@ -15,11 +13,11 @@ public final class ConstConfiguration {
 	private ConstConfiguration() {
 		super();
 	}
-	
+
 	/** Declare the authentication method */
 	public static final String AUTHENTICATION_METHODE;
-	
-	static{
-		AUTHENTICATION_METHODE = ConstString.EMPTY;
+
+	static {
+		AUTHENTICATION_METHODE = ConfigurationReader.getInstance().getApplicationProperty("AUTHENTICATION.METHODE"); //$NON-NLS-1$
 	}
 }

@@ -39,6 +39,7 @@ public final class AuthenticationProvider {
 	 */
 	public void setAuthProvider(final IAuthentication authProvider) {
 		this.authProvider = authProvider;
+		this.authProvider.init();
 	}
 	
 	
