@@ -2,18 +2,10 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="/struts-tags" prefix="s"%>
 
-<center><s:action name="/logon/execute">
+<center><s:form action="execute" namespace="/logon" method="POST">
 	<table>
-		<tr>
-			<td><s:text name="logon.login"/></td>
-			<td><s:textfield name="logon.login" /></td>
-		</tr>
-		<tr>
-			<td><s:text name="logon.password"/></td>
-			<td><s:textfield name="logon.password"/></td>
-		</tr>
-		<tr>
-			<td colspan="2" align="right"><s:submit><s:text name="logon.submit"/></s:submit></td>
-		</tr>
+		<s:textfield key="logon.login"/>
+		<s:textfield key="logon.password"/>
+		<s:submit key="logon.submit"/>
 	</table>
-</s:action></center>
+</s:form></center>

@@ -8,8 +8,6 @@
     <constant name="struts.enable.DynamicMethodInvocation" value="false" />
     <constant name="struts.devMode" value="false" />
 
-    <include file="logon.xml"/>
+	<include file="logon.xml"></include>
     
-    <bean class="org.webterm.core.plugin.AuthenticationPlugin" scope="singleton" type="org.webterm.core.plugin.AuthenticationPlugin"></bean>
-
 </struts>

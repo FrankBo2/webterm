@@ -1,5 +1,8 @@
 package org.webterm.ui;
 
+import org.apache.log4j.Logger;
+import org.webterm.core.plugin.authentication.AuthenticationProvider;
+
 import com.opensymphony.xwork2.Action;
 
 /**
@@ -8,6 +11,9 @@ import com.opensymphony.xwork2.Action;
  * @author charles
  */
 public class LogonAction implements Action {
+
+	/** Logger */
+	private static final Logger LOG = Logger.getLogger(LogonAction.class);
 
 	/** log-on object */
 	private transient final LogonForm logon = new LogonForm();
@@ -22,6 +28,12 @@ public class LogonAction implements Action {
 	 */
 	@Override
 	public String execute() {
+		if ("execute".equals(this.phase)) { //$NON-NLS-1$
+			final AuthenticationProvider auth = AuthenticationProvider.getInstance();
+			if (auth.isValidUser(this.logon.getLogin(), this.logon.getPassword())) {
+				LOG.info("user logged in : " + this.logon.getLogin()); //$NON-NLS-1$
+			}
+		}
 		return null;
 	}
 
