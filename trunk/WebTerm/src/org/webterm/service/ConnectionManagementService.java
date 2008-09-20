@@ -14,7 +14,7 @@ import org.webterm.term.AbstractTermDescription;
 import org.webterm.term.TermFactory;
 
 /**
- * Service for Connextion Management.
+ * Service for Connection Management.
  * 
  * @author charles
  */
@@ -43,9 +43,9 @@ public final class ConnectionManagementService {
 	private transient final Map<Long, AbstractTermDescription> processList = new HashMap<Long, AbstractTermDescription>();
 
 	/**
-	 * Methode to get the list of connections from the user.
+	 * Method to get the list of connections from the user.
 	 * 
-	 * @param params Request params
+	 * @param params Request parameters
 	 * @param result Request result
 	 */
 	public void getConnexionList(final AbstractServiceRequest params, final ConnectionListResult result) {
@@ -68,9 +68,9 @@ public final class ConnectionManagementService {
 	}
 
 	/**
-	 * Methode to create a term connection.
+	 * Method to create a term connection.
 	 * 
-	 * @param params Request params
+	 * @param params Request parameters
 	 * @param result Request result
 	 */
 	public void createTerm(final CreateConnectionRequest params, final SimpleConnectionResult result) {
@@ -94,9 +94,9 @@ public final class ConnectionManagementService {
 	}
 
 	/**
-	 * Methode for the user password check.
+	 * Method for the user password check.
 	 * 
-	 * @param params Request params
+	 * @param params Request parameters
 	 * @param result Request result
 	 */
 	public void checkUser(final AbstractServiceRequest params, final AbstractServiceResult result) {
@@ -119,9 +119,9 @@ public final class ConnectionManagementService {
 	}
 
 	/**
-	 * Methode for closing the connection to the server.
+	 * Method for closing the connection to the server.
 	 * 
-	 * @param params Request params
+	 * @param params Request parameters
 	 * @param result Request result
 	 */
 	public void closeConnexion(final SimpleConnectionRequest params, final SimpleConnectionResult result) {
@@ -142,10 +142,10 @@ public final class ConnectionManagementService {
 	}
 
 	/**
-	 * Methode to get the process <code>pid</code> in the process List. This methode check the user login/password and check if the corresponding, if exists,
+	 * Method to get the process <code>pid</code> in the process List. This method check the user login/password and check if the corresponding, if exists,
 	 * is owned by the current user.
 	 * 
-	 * @param params Request params
+	 * @param params Request parameters
 	 * @param result Request result
 	 */
 	private void getConnection(final SimpleConnectionRequest params, final SimpleConnectionResult result) {
@@ -174,9 +174,9 @@ public final class ConnectionManagementService {
 	}
 
 	/**
-	 * Methode for closing the connection process. This methode destroy the AbstractTermDescription object stored in the application server.
+	 * Method for closing the connection process. This method destroy the AbstractTermDescription object stored in the application server.
 	 * 
-	 * @param params Request params
+	 * @param params Request parameters
 	 * @param result Request result
 	 */
 	public void closeProcess(final SimpleConnectionRequest params, final SimpleConnectionResult result) {
@@ -197,9 +197,9 @@ public final class ConnectionManagementService {
 	}
 
 	/**
-	 * Methode to get the current screnn on the connection.
+	 * Method to get the current screen on the connection.
 	 * 
-	 * @param params Request params
+	 * @param params Request parameters
 	 * @param result Request result
 	 */
 	public void getScreen(final SimpleConnectionRequest params, final SimpleConnectionResult result) {
