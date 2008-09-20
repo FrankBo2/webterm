@@ -1,12 +1,12 @@
 package org.webterm.test; // NOPMD - test class
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.webterm.core.plugin.AutheticationPlugIn;
+import org.webterm.core.plugin.AuthenticationPlugin;
 import org.webterm.core.plugin.authentication.AuthenticationProvider;
 
 /**
@@ -16,15 +16,20 @@ import org.webterm.core.plugin.authentication.AuthenticationProvider;
  */
 public final class TestAuth {
 
-	/** authentication plug-in */
-	private transient final AutheticationPlugIn plugin = new AutheticationPlugIn();
-
 	/**
-	 * Init method
+	 * Initialization method
 	 */
 	@Before
 	public void init() {
-		this.plugin.init(null, null);
+		AuthenticationPlugin.getInstance().init();
+	}
+
+	/**
+	 * Destroy method
+	 */
+	@After
+	public void destroy() {
+		AuthenticationPlugin.getInstance().destroy();
 	}
 
 	/**
@@ -52,14 +57,6 @@ public final class TestAuth {
 	public void test3() {
 		final boolean test = AuthenticationProvider.getInstance().isValidUser("", ""); //$NON-NLS-1$ //$NON-NLS-2$ //NOPMD
 		assertFalse("empty check", test); //$NON-NLS-1$
-	}
-
-	/**
-	 * Destroy method.
-	 */
-	@After
-	public void destroy() {
-		this.plugin.destroy();
 	}
 
 }

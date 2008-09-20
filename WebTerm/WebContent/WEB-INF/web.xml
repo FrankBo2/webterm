@@ -8,6 +8,12 @@
 	<display-name>WebTerm</display-name>
 
 	<filter>
+		<filter-name>PluginManager</filter-name>
+		<filter-class>
+			org.webterm.core.plugin.PluginManager
+		</filter-class>
+	</filter>
+	<filter>
 		<filter-name>struts2</filter-name>
 		<filter-class>
 			org.apache.struts2.dispatcher.FilterDispatcher

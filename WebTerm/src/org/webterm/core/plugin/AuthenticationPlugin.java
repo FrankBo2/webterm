@@ -6,9 +6,6 @@ package org.webterm.core.plugin;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.action.PlugIn;
-import org.apache.struts.config.ModuleConfig;
 import org.webterm.core.configuration.ConstConfiguration;
 import org.webterm.core.plugin.authentication.AuthenticationProvider;
 import org.webterm.core.plugin.authentication.FileAuthentication;
@@ -20,15 +17,27 @@ import org.webterm.core.plugin.authentication.LdapAuthentication;
  * 
  * @author charles
  */
-public final class AutheticationPlugIn implements PlugIn {
+public final class AuthenticationPlugin implements IPlugin {
 
 	/** Map for registered authentication provider */
 	private transient final Map<String, IAuthentication> map = new HashMap<String, IAuthentication>();
 
+	/** Unique instance. */
+	private static final AuthenticationPlugin instance = new AuthenticationPlugin();
+
+	/**
+	 * Getter
+	 * 
+	 * @return Unique instance.
+	 */
+	public static AuthenticationPlugin getInstance() {
+		return instance;
+	}
+
 	/**
 	 * Constructor
 	 */
-	public AutheticationPlugIn() {
+	private AuthenticationPlugin() {
 		super();
 		register(FileAuthentication.getInstance());
 		register(LdapAuthentication.getInstance());
@@ -46,7 +55,7 @@ public final class AutheticationPlugIn implements PlugIn {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.apache.struts.action.PlugIn#destroy()
+	 * @see org.webterm.core.plugin.IPlugin#destroy()
 	 */
 	@Override
 	public void destroy() {
@@ -56,10 +65,10 @@ public final class AutheticationPlugIn implements PlugIn {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.apache.struts.action.PlugIn#init(org.apache.struts.action.ActionServlet, org.apache.struts.config.ModuleConfig)
+	 * @see org.webterm.core.plugin.IPlugin#init()
 	 */
 	@Override
-	public void init(final ActionServlet arg0, final ModuleConfig arg1) {
+	public void init() {
 		AuthenticationProvider.getInstance().setAuthProvider(this.map.get(ConstConfiguration.AUTHENTICATION_METHODE));
 	}
 }

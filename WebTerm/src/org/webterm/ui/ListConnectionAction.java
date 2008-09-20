@@ -15,7 +15,7 @@ public class ListConnectionAction implements Action {
 	 * @see com.opensymphony.xwork2.Action#execute()
 	 */
 	@Override
-	public String execute() throws Exception {
+	public String execute() {
 		return null;
 	}
 
