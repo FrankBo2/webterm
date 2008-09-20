@@ -1,16 +1,11 @@
 package org.webterm.ui;
 
-import org.apache.struts.action.ActionForm;
-
 /**
  * Form for the log-on action.
  * 
  * @author charles
  */
-public class LogonForm extends ActionForm {
-
-	/** Class serial number */
-	private static final long serialVersionUID = 1L;
+public class LogonForm {
 
 	/** login of the user */
 	private String login;

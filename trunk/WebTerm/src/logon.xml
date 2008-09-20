@@ -5,12 +5,13 @@
 
 <struts>
 
-    <package name="webterm" namespace="/webterm" extends="struts-default">
+    <package name="logon" namespace="/logon" extends="struts-default">
 
-        <action name="logon/*" class="org.webterm.ui.LogonAction" >
+        <action name="*" class="org.webterm.ui.LogonAction" >
         	<param name="phase">{1}</param>
-            <result>/example/HelloWorld.jsp</result>
+            <result>/index.jsp</result>
         </action>
 
     </package>
+
 </struts>

@@ -14,7 +14,7 @@ public class LogonAction implements Action {
 
 	/** Authentication phase */
 	private String phase;
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 

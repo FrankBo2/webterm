@@ -12,7 +12,7 @@
 
 	<tag>
 		<name>title</name>
-		<tag-class>org.webterm.ui.tag.Title.tag</tag-class>
+		<tag-class>org.webterm.ui.tag.TitleTag</tag-class>
 		<body-content>empty</body-content>
 		<description>
 			Display browser title.

@@ -1,13 +1,11 @@
 package org.webterm.ui;
 
-import org.apache.struts.action.ActionForm;
-
 /**
  * Abstract class to managed connection request on the server.
  * 
  * @author charles
  */
-public abstract class AbstractConnectedForm extends ActionForm { // NOPMD - no abstract method
+public abstract class AbstractConnectedForm { // NOPMD - no abstract method
 
 	/** Id of the Connection (SessionId) */
 	private String connectionId;
