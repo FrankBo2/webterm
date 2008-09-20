@@ -21,7 +21,7 @@ public final class ConfigurationReader {
 	private static final Logger LOG = Logger.getLogger(ConfigurationReader.class);
 
 	/** Name of the configuration file */
-	private static final String applicationBundle = "/org/webterm/core/config/ApplicationConfiguration"; //$NON-NLS-1$
+	private static final String applicationBundle = "org.webterm.core.configuration.ApplicationConfiguration"; //$NON-NLS-1$
 
 	/** Unique instance. */
 	private static final ConfigurationReader instance = new ConfigurationReader();
@@ -45,7 +45,7 @@ public final class ConfigurationReader {
 		super();
 		ResourceBundle tmp = null; // NOPMD - init
 		try {
-			tmp = ResourceBundle.getBundle(applicationBundle, Locale.getDefault());
+			tmp = ResourceBundle.getBundle(applicationBundle, Locale.getDefault(), Thread.currentThread().getContextClassLoader());
 		} catch (final MissingResourceException e) {
 			LOG.fatal("No resourceBundle : " + applicationBundle); //$NON-NLS-1$
 		}
