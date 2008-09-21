@@ -15,6 +15,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.apache.log4j.Logger;
+import org.webterm.core.plugin.authentication.AuthenticationPlugin;
 
 /**
  * Plug-in manager class

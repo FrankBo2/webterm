@@ -1,35 +1,16 @@
-package org.webterm.ui;
+package org.webterm.service.forms.query;
+
+import org.webterm.service.forms.AbstractServiceRequest;
 
 /**
  * Form for the log-on action.
  * 
  * @author charles
  */
-public class LogonForm {
-
-	/** login of the user */
-	private String login;
+public class LogonRequest extends AbstractServiceRequest {
 	
 	/** password of the user */
 	private String password;
-
-	/**
-	 * Getter
-	 * 
-	 * @return the login
-	 */
-	public String getLogin() {
-		return this.login;
-	}
-
-	/**
-	 * Setter
-	 * 
-	 * @param login the login to set
-	 */
-	public void setLogin(final String login) {
-		this.login = login;
-	}
 
 	/**
 	 * Getter

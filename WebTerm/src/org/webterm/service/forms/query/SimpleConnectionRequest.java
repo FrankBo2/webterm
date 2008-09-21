@@ -1,6 +1,6 @@
 package org.webterm.service.forms.query;
 
-import org.webterm.service.AbstractServiceRequest;
+import org.webterm.service.forms.AbstractServiceRequest;
 
 /**
  * Form for simple connection request

@@ -5,8 +5,9 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.webterm.core.ConstStruts;
 import org.webterm.core.UserDescription;
-import org.webterm.core.plugin.authentication.AuthenticationProvider;
+import org.webterm.service.AuthenticationService;
 import org.webterm.service.SessionService;
+import org.webterm.service.forms.query.LogonRequest;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -20,11 +21,17 @@ public class LogonAction extends ActionSupport {
 	/** Class serial */
 	private static final long serialVersionUID = 1L;
 
+	/** Action : execute log-on */
+	public static final String ACTION_EXECUTE = "execute"; //$NON-NLS-1$
+
+	/** Action : execute log-off */
+	public static final String ACTION_LOGOFF = "logoff"; //$NON-NLS-1$
+	
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(LogonAction.class);
 
 	/** log-on object */
-	private transient final LogonForm logon = new LogonForm();
+	private transient final LogonRequest logon = new LogonRequest();
 
 	/** Authentication phase */
 	private String phase;
@@ -38,12 +45,12 @@ public class LogonAction extends ActionSupport {
 	public String execute() {
 		String result = ConstStruts.TARGET_ERROR; // NOPMD - init
 		LOGGER.info("trying : " + this.phase); //$NON-NLS-1$
-		if ("execute".equals(this.phase)) { //$NON-NLS-1$
+		if (ACTION_EXECUTE.equals(this.phase)) {
 			final String login = StringUtils.trimToEmpty(this.logon.getLogin());
 			final String pwd = this.logon.getPassword();
 			if (StringUtils.isEmpty(login) || StringUtils.isEmpty(pwd)) {
 				addActionError(getText("logon.error.no_login")); //$NON-NLS-1$
-			} else if (AuthenticationProvider.getInstance().isValidUser(login, pwd)) {
+			} else if (AuthenticationService.getInstance().isValidUser(login, pwd)) {
 				LOGGER.info("user logged in : " + this.logon.getLogin()); //$NON-NLS-1$
 				final UserDescription user = new UserDescription();
 				user.setLogin(login);
@@ -52,6 +59,8 @@ public class LogonAction extends ActionSupport {
 			} else {
 				addActionError(getText("logon.error.invalid_user")); //$NON-NLS-1$
 			}
+		} else if (ACTION_LOGOFF.equals(this.phase)) {
+			SessionService.getInstance().setUserDescription(ServletActionContext.getRequest(), null);
 		}
 		return result;
 	}
@@ -61,7 +70,7 @@ public class LogonAction extends ActionSupport {
 	 * 
 	 * @return the logon
 	 */
-	public LogonForm getLogon() {
+	public LogonRequest getLogon() {
 		return this.logon;
 	}
 

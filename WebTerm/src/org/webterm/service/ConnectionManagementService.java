@@ -5,7 +5,8 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.webterm.core.ConstMessages;
-import org.webterm.service.AbstractServiceResult.Status;
+import org.webterm.service.forms.AbstractServiceRequest;
+import org.webterm.service.forms.AbstractServiceResult.Status;
 import org.webterm.service.forms.query.CreateConnectionRequest;
 import org.webterm.service.forms.query.SimpleConnectionRequest;
 import org.webterm.service.forms.result.ConnectionListResult;
@@ -49,10 +50,8 @@ public final class ConnectionManagementService {
 	 * @param result Request result
 	 */
 	public void getConnexionList(final AbstractServiceRequest params, final ConnectionListResult result) {
-		checkUser(params, result);
-
 		if (result.getStatus() == Status.OK) {
-			final String userName = params.getUserName();
+			final String userName = params.getLogin();
 			if (StringUtils.isEmpty(userName)) {
 				result.setStatus(Status.ERROR);
 				result.setMessage(ConstMessages.ERR_NO_PARAMETER_USR_PWD);
@@ -74,8 +73,6 @@ public final class ConnectionManagementService {
 	 * @param result Request result
 	 */
 	public void createTerm(final CreateConnectionRequest params, final SimpleConnectionResult result) {
-		checkUser(params, result);
-
 		if (result.getStatus() == Status.OK) {
 			final AbstractTermDescription process = TermFactory.getInstance().create(params.getType());
 			if (process == null) {
@@ -90,31 +87,6 @@ public final class ConnectionManagementService {
 				result.setProcess(process);
 				result.setMessage(ConstMessages.OK_CREATED);
 			}
-		}
-	}
-
-	/**
-	 * Method for the user password check.
-	 * 
-	 * @param params Request parameters
-	 * @param result Request result
-	 */
-	public void checkUser(final AbstractServiceRequest params, final AbstractServiceResult result) {
-		final String userName = params.getUserName();
-		final String userPassword = params.getUserPassword();
-
-		if (StringUtils.isNotEmpty(userName) && StringUtils.isNotEmpty(userPassword)) {
-			//FIXME auth methode
-			if ("charles".equalsIgnoreCase(userName) && "Ker%29H".equals(userPassword)) { //$NON-NLS-1$ //$NON-NLS-2$
-				result.setStatus(Status.OK);
-				result.setMessage(ConstMessages.OK_AUTHENTICATED);
-			} else {
-				result.setStatus(Status.ERROR);
-				result.setMessage(ConstMessages.ERR_BAD_AUTH);
-			}
-		} else {
-			result.setStatus(Status.ERROR);
-			result.setMessage(ConstMessages.ERR_NO_PARAMETER_USR_PWD);
 		}
 	}
 
@@ -149,7 +121,6 @@ public final class ConnectionManagementService {
 	 * @param result Request result
 	 */
 	private void getConnection(final SimpleConnectionRequest params, final SimpleConnectionResult result) {
-		checkUser(params, result);
 		if (result.getStatus() == Status.OK) {
 			final Long pid = Long.valueOf(params.getPid());
 			if (pid == null) {
@@ -161,7 +132,7 @@ public final class ConnectionManagementService {
 					result.setStatus(Status.ERROR);
 					result.setMessage(ConstMessages.ERR_NO_PROCESS);
 				} else {
-					final String userName = params.getUserName();
+					final String userName = params.getLogin();
 					if (term.getOwner().equalsIgnoreCase(userName)) {
 						result.setProcess(term);
 					} else {
