@@ -13,15 +13,15 @@ import org.webterm.term.ascii.ibm3164.Ibm3164TermCreator;
 public final class TermFactory {
 
 	/** Map for registered creators */
-	private transient final static Map<String, ITermCreator<? extends AbstractTermDescription>> creators = new HashMap<String, ITermCreator<? extends AbstractTermDescription>>();
+	private transient final Map<String, ITermCreator<? extends AbstractTermDescription>> creators = new HashMap<String, ITermCreator<? extends AbstractTermDescription>>();
 
-	/** Unic instance of the class */
+	/** Unique instance of the class */
 	private static final TermFactory instance = new TermFactory();
 
 	/**
 	 * Getter
 	 * 
-	 * @return Unic instance of the class
+	 * @return Unique instance of the class
 	 */
 	public static TermFactory getInstance() {
 		return instance;
@@ -32,8 +32,8 @@ public final class TermFactory {
 	 * 
 	 * @param creator
 	 */
-	private static void register(final ITermCreator<? extends AbstractTermDescription> creator) {
-		creators.put(creator.getTermType(), creator);
+	private void register(final ITermCreator<? extends AbstractTermDescription> creator) {
+		this.creators.put(creator.getTermType(), creator);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public final class TermFactory {
 	 * @return A brand new instance of the terminal description if <i>type</i> is found in <i>creators</i>, null otherwidth.
 	 */
 	public AbstractTermDescription create(final String type) {
-		final ITermCreator<? extends AbstractTermDescription> creator = creators.get(type);
+		final ITermCreator<? extends AbstractTermDescription> creator = this.creators.get(type);
 		return creator == null ? null : creator.newInstance();
 	}
 }
