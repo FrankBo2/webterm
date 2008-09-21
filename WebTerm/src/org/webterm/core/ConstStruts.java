@@ -23,4 +23,6 @@ public final class ConstStruts {
 	/** Declare the success target */
 	public static final String TARGET_SUCCESS = "SUCCESS";//$NON-NLS-1$
 
+	/** Session attribute name for user description */
+	public static final String SESSION_USER_DESC = UserDescription.class.getName();
 }

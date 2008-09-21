@@ -18,5 +18,14 @@
 			Display browser title.
 		</description>
 	</tag>
+
+	<tag>
+		<name>checkUser</name>
+		<tag-class>org.webterm.ui.tag.CheckUserTag</tag-class>
+		<body-content>empty</body-content>
+		<description>
+			Check if the user is logged in.
+		</description>
+	</tag>
 	
 </taglib>

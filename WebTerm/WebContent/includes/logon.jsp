@@ -13,6 +13,6 @@
 
 <script type="text/javascript">
 	dojo.require("dojo.io.*");
-	dojo.io.updateNode("topDiv", {url : '<s:url value="/includes/side.jsp"/>'});
+	dojo.io.updateNode("topDiv", {url : '<s:url value="/includes/top.jsp"/>'});
 </script>
 

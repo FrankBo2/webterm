@@ -2,8 +2,11 @@ package org.webterm.ui;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 import org.webterm.core.ConstStruts;
+import org.webterm.core.UserDescription;
 import org.webterm.core.plugin.authentication.AuthenticationProvider;
+import org.webterm.service.SessionService;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -42,6 +45,9 @@ public class LogonAction extends ActionSupport {
 				addActionError(getText("logon.error.no_login")); //$NON-NLS-1$
 			} else if (AuthenticationProvider.getInstance().isValidUser(login, pwd)) {
 				LOGGER.info("user logged in : " + this.logon.getLogin()); //$NON-NLS-1$
+				final UserDescription user = new UserDescription();
+				user.setLogin(login);
+				SessionService.getInstance().setUserDescription(ServletActionContext.getRequest(), user);
 				result = ConstStruts.TARGET_SUCCESS;
 			} else {
 				addActionError(getText("logon.error.invalid_user")); //$NON-NLS-1$
