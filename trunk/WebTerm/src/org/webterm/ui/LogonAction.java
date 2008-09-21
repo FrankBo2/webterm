@@ -1,5 +1,6 @@
 package org.webterm.ui;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.webterm.core.ConstStruts;
 import org.webterm.core.plugin.authentication.AuthenticationProvider;
@@ -35,13 +36,15 @@ public class LogonAction extends ActionSupport {
 		String result = ConstStruts.TARGET_ERROR; // NOPMD - init
 		LOGGER.info("trying : " + this.phase); //$NON-NLS-1$
 		if ("execute".equals(this.phase)) { //$NON-NLS-1$
-			final AuthenticationProvider auth = AuthenticationProvider.getInstance();
-			if (auth.isValidUser(this.logon.getLogin(), this.logon.getPassword())) {
+			final String login = StringUtils.trimToEmpty(this.logon.getLogin());
+			final String pwd = this.logon.getPassword();
+			if (StringUtils.isEmpty(login) || StringUtils.isEmpty(pwd)) {
+				addActionError(getText("logon.error.no_login")); //$NON-NLS-1$
+			} else if (AuthenticationProvider.getInstance().isValidUser(login, pwd)) {
 				LOGGER.info("user logged in : " + this.logon.getLogin()); //$NON-NLS-1$
 				result = ConstStruts.TARGET_SUCCESS;
 			} else {
-				LOGGER.info("user log-on refused : " + this.logon.getLogin()); //$NON-NLS-1$
-				addActionError("Invalid user name or password! Please try again!");
+				addActionError(getText("logon.error.invalid_user")); //$NON-NLS-1$
 			}
 		}
 		return result;
