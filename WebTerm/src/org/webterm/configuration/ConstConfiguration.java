@@ -1,4 +1,4 @@
-package org.webterm.core.configuration;
+package org.webterm.configuration;
 
 /**
  * Configuration reader

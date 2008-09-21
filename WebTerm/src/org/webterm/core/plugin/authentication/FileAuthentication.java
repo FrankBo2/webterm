@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.webterm.core.configuration.ConfigurationReader;
+import org.webterm.configuration.ConfigurationReader;
 
 /**
  * Provider for file authentication

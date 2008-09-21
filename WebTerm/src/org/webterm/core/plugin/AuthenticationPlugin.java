@@ -6,7 +6,7 @@ package org.webterm.core.plugin;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.webterm.core.configuration.ConstConfiguration;
+import org.webterm.configuration.ConstConfiguration;
 import org.webterm.core.plugin.authentication.AuthenticationProvider;
 import org.webterm.core.plugin.authentication.FileAuthentication;
 import org.webterm.core.plugin.authentication.IAuthentication;

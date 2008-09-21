@@ -12,8 +12,8 @@ import javax.naming.directory.InitialDirContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.webterm.configuration.ConfigurationReader;
 import org.webterm.core.ConstString;
-import org.webterm.core.configuration.ConfigurationReader;
 
 /**
  * Provider for LDAP Authentication
