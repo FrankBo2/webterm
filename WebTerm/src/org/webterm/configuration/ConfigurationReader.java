@@ -21,7 +21,7 @@ public final class ConfigurationReader {
 	private static final Logger LOG = Logger.getLogger(ConfigurationReader.class);
 
 	/** Name of the configuration file */
-	private static final String applicationBundle = "org.webterm.core.configuration.ApplicationConfiguration"; //$NON-NLS-1$
+	private static final String applicationBundle = "org.webterm.configuration.ApplicationConfiguration"; //$NON-NLS-1$
 
 	/** Unique instance. */
 	private static final ConfigurationReader instance = new ConfigurationReader();
