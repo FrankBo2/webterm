@@ -3,7 +3,7 @@ package org.webterm.service.forms.result;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.webterm.service.AbstractServiceResult;
+import org.webterm.service.forms.AbstractServiceResult;
 import org.webterm.term.AbstractTermDescription;
 
 /**

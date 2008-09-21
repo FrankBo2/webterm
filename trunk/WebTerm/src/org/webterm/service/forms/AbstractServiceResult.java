@@ -1,4 +1,4 @@
-package org.webterm.service;
+package org.webterm.service.forms;
 
 /**
  * Généric response for service request.

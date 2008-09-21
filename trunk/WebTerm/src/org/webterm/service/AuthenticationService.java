@@ -1,34 +1,36 @@
 /**
  * 
  */
-package org.webterm.core.plugin.authentication;
+package org.webterm.service;
+
+import org.webterm.core.plugin.authentication.IAuthentication;
 
 /**
  * Authentication provider
  * 
  * @author charles
  */
-public final class AuthenticationProvider {
+public final class AuthenticationService {
 	
 	/** authentication provider */
 	private transient IAuthentication authProvider = null;
 
 	/** Unique instance. */
-	private static final AuthenticationProvider instance = new AuthenticationProvider();
+	private static final AuthenticationService instance = new AuthenticationService();
 
 	/**
 	 * Getter
 	 * 
 	 * @return Unique instance.
 	 */
-	public static AuthenticationProvider getInstance() {
+	public static AuthenticationService getInstance() {
 		return instance;
 	}
 
 	/**
 	 * Constructor
 	 */
-	private AuthenticationProvider() {
+	private AuthenticationService() {
 		super();
 	}
 

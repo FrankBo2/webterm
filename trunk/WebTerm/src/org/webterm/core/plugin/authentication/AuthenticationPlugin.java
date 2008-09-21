@@ -1,16 +1,14 @@
 /**
  * 
  */
-package org.webterm.core.plugin;
+package org.webterm.core.plugin.authentication;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.webterm.configuration.ConstConfiguration;
-import org.webterm.core.plugin.authentication.AuthenticationProvider;
-import org.webterm.core.plugin.authentication.FileAuthentication;
-import org.webterm.core.plugin.authentication.IAuthentication;
-import org.webterm.core.plugin.authentication.LdapAuthentication;
+import org.webterm.core.plugin.IPlugin;
+import org.webterm.service.AuthenticationService;
 
 /**
  * Plug in for authentication management.
@@ -59,7 +57,7 @@ public final class AuthenticationPlugin implements IPlugin {
 	 */
 	@Override
 	public void destroy() {
-		AuthenticationProvider.getInstance().setAuthProvider(null);
+		AuthenticationService.getInstance().setAuthProvider(null);
 	}
 
 	/*
@@ -69,6 +67,6 @@ public final class AuthenticationPlugin implements IPlugin {
 	 */
 	@Override
 	public void init() {
-		AuthenticationProvider.getInstance().setAuthProvider(this.map.get(ConstConfiguration.AUTHENTICATION_METHODE));
+		AuthenticationService.getInstance().setAuthProvider(this.map.get(ConstConfiguration.AUTHENTICATION_METHODE));
 	}
 }

@@ -1,6 +1,6 @@
 package org.webterm.service.forms.result;
 
-import org.webterm.service.AbstractServiceResult;
+import org.webterm.service.forms.AbstractServiceResult;
 import org.webterm.term.AbstractTermDescription;
 
 /**

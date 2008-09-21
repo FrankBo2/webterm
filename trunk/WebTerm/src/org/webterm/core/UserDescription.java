@@ -3,31 +3,40 @@
  */
 package org.webterm.core;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import org.webterm.service.forms.AbstractServiceRequest;
+
 /**
  * Class for User description in the session
  * 
  * @author charles
  */
-public final class UserDescription {
+public final class UserDescription extends AbstractServiceRequest {
 
-	/** Login of the user */
-	private String login;
+	/** Connection date */
+	private Date connectionDate;
 
 	/**
-	 * Getter
-	 * 
-	 * @return the login
+	 * Constructor
 	 */
-	public String getLogin() {
-		return this.login;
+	public UserDescription() {
+		super();
+		this.connectionDate = Calendar.getInstance().getTime();
 	}
 
 	/**
-	 * Setter
-	 * 
-	 * @param login the login to set
+	 * @return the connectionDate
 	 */
-	public void setLogin(final String login) {
-		this.login = login;
+	public Date getConnectionDate() {
+		return this.connectionDate;
+	}
+
+	/**
+	 * @param connectionDate the connectionDate to set
+	 */
+	public void setConnectionDate(final Date connectionDate) {
+		this.connectionDate = connectionDate;
 	}
 }
