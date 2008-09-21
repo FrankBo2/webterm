@@ -8,6 +8,6 @@
     <constant name="struts.enable.DynamicMethodInvocation" value="false" />
     <constant name="struts.devMode" value="false" />
 
-	<include file="logon.xml"></include>
+	<include file="/org/webterm/configuration/struts/logon.xml"></include>
     
 </struts>

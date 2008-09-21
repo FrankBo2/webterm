@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.webterm.core.configuration;
+package org.webterm.configuration;
 
 import java.util.Locale;
 import java.util.MissingResourceException;

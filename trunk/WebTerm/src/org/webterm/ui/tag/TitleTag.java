@@ -7,7 +7,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.log4j.Logger;
-import org.webterm.core.configuration.ConstConfiguration;
+import org.webterm.configuration.ConstConfiguration;
 
 /**
  * Tag for title display
