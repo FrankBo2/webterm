@@ -25,4 +25,7 @@ public final class ConstStruts {
 
 	/** Session attribute name for user description */
 	public static final String SESSION_USER_DESC = UserDescription.class.getName();
+
+	/** Declare the log-off target */
+	public static final String TARGET_LOGOFF = "LOGOFF"; //$NON-NLS-1$
 }

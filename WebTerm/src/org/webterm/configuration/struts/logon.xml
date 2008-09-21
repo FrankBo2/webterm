@@ -10,7 +10,8 @@
         <action name="*" class="org.webterm.ui.LogonAction" >
         	<param name="phase">{1}</param>
             <result name="ERROR">/includes/logon.jsp</result>
-            <result name="SUCCESS">/includes/home.jsp</result>
+            <result name="SUCCESS">/includes/mainApplication.jsp</result>
+            <result name="LOGOFF">/includes/logon.jsp</result>
         </action>
 
     </package>

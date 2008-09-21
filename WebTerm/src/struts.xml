@@ -9,5 +9,6 @@
     <constant name="struts.devMode" value="false" />
 
 	<include file="/org/webterm/configuration/struts/logon.xml"></include>
+	<include file="/org/webterm/configuration/struts/connection.xml"></include>
     
 </struts>

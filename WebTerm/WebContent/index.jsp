@@ -14,11 +14,14 @@
 </head>
 <body>
 
-
-<s:div id="topDiv"  theme="ajax"/>
-<s:div id="sideDiv" theme="ajax" updateFreq="15000" href="includes/side.jsp" showLoadingText="false"/>
 <s:div id="mainDiv" theme="ajax">
-	<s:include value="/includes/logon.jsp"></s:include>
+	<wt:ifUserConnected>
+		<s:include value="/includes/mainApplication.jsp"/>
+	</wt:ifUserConnected>
+	<wt:ifUserNotConnected>
+		<s:include value="/includes/logon.jsp"/>
+	</wt:ifUserNotConnected>
 </s:div>
+
 </body>
 </html>
