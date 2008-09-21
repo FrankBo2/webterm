@@ -6,7 +6,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title><wt:title/></title>
-	<s:head theme="ajax" debug="false"/>
+	<s:head theme="ajax" debug="true"/>
 	<link href="<s:url value="/theme/default/main.css"/>" rel="stylesheet" type="text/css"/>
 </head>
 <body>
