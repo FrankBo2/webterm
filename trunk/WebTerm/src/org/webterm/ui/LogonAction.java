@@ -61,6 +61,7 @@ public class LogonAction extends ActionSupport {
 			}
 		} else if (ACTION_LOGOFF.equals(this.phase)) {
 			SessionService.getInstance().setUserDescription(ServletActionContext.getRequest(), null);
+			result = ConstStruts.TARGET_LOGOFF;
 		}
 		return result;
 	}

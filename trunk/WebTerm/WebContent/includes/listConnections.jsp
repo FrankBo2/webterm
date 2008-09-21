@@ -10,7 +10,7 @@
 		<s:iterator value="result.processList">
 			<tr id="row_<s:property value="id"/>">
 				<td>
-					<s:url id="connUrl" action="remove">
+					<s:url id="connUrl" action="display" namespace="/connection">
 						<s:param name="id" value="id" />
 					</s:url>
 					<s:a href="%{connUrl}" theme="ajax" targets="mainDiv">

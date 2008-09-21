@@ -27,5 +27,32 @@
 			Check if the user is logged in.
 		</description>
 	</tag>
+
+	<tag>
+		<name>ifUserConnected</name>
+		<tag-class>org.webterm.ui.tag.IfUserConnectedTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Execute body if user is logged in.
+		</description>
+	</tag>
+
+	<tag>
+		<name>ifUserNotConnected</name>
+		<tag-class>org.webterm.ui.tag.IfUserNotConnectedTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Execute body if user is not logged in.
+		</description>
+	</tag>
+
+	<tag>
+		<name>userName</name>
+		<tag-class>org.webterm.ui.tag.UserNameTag</tag-class>
+		<body-content>empty</body-content>
+		<description>
+			Display the login of the current user.
+		</description>
+	</tag>
 	
 </taglib>

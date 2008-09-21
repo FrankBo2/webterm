@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+    <package name="conneciton" namespace="/connection" extends="struts-default">
+
+        <action name="list" class="org.webterm.ui.ConnectionListAction" >
+            <result name="SUCCESS">/includes/listConnections.jsp</result>
+        </action>
+
+        <action name="create" class="org.webterm.ui.ConnectionCreateAction" >
+            <result name="SUCCESS">/includes/listConnections.jsp</result>
+        </action>
+
+    </package>
+
+</struts>

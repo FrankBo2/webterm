@@ -10,9 +10,3 @@
 	<s:submit key="logon.submit" theme="ajax" targets="mainDiv" showLoadingText="false" />
 </s:form></center>
 
-
-<script type="text/javascript">
-	dojo.require("dojo.io.*");
-	dojo.io.updateNode("topDiv", {url : '<s:url value="/includes/top.jsp"/>'});
-</script>
-
