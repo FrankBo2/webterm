@@ -3,9 +3,10 @@
 <%@ taglib uri="/struts-tags" prefix="s"%>
 
 <wt:checkUser/>
-
+<html>
+<body onload="alert('test')">
 <s:div id="topDiv"  cssClass="topDiv"  theme="ajax" showLoadingText="false" href="includes/top.jsp" />
 <s:div id="sideDiv" cssClass="sideDiv" theme="ajax" showLoadingText="false" href="connection/list.action" updateFreq="15000" />
-<s:div id="pageDiv" cssClass="pageDiv" theme="ajax" showLoadingText="false">
-test
-</s:div>
+<s:div id="pageDiv" cssClass="pageDiv" theme="ajax" showLoadingText="false" />
+</body>
+</html>

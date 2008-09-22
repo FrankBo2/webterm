@@ -11,20 +11,17 @@
 	<title><wt:title/></title>
 	<s:head theme="ajax" debug="false"/>
 	<link href="<s:url value="/theme/default/main.css"/>" rel="stylesheet" type="text/css"/>
-	<%-- YUI --%>  
-	<script type="text/javascript" src="<s:url value="/script/yui/yahoo-min.js"/>" ></script> 
-	<script type="text/javascript" src="<s:url value="/script/yui/event-min.js"/>" ></script>
 	<%-- main script --%>  
 	<script type="text/javascript" src="<s:url value="/script/main.js"/>" ></script>
 </head>
-<body>
+<body onload="resizeWindow()">
 
-<s:div id="mainDiv" cssClass="mainDiv" theme="ajax">
+<s:div id="mainDiv" cssClass="mainDiv" theme="ajax" showLoadingText="false">
 	<wt:ifUserConnected>
 		<s:include value="/includes/mainApplication.jsp"/>
 	</wt:ifUserConnected>
 	<wt:ifUserNotConnected>
-		<s:include value="/includes/logon.jsp"/>
+		<s:include value="/includes/logon/logon.jsp"/>
 	</wt:ifUserNotConnected>
 </s:div>
 

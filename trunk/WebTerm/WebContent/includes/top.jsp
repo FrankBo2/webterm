@@ -9,14 +9,14 @@
 		<tr>
 			<td>
 				<s:url id="logoffUrl" action="logoff" namespace="/logon" />
-				<s:a href="%{logoffUrl}" theme="ajax" targets="mainDiv">
+				<s:a href="%{logoffUrl}" theme="ajax" targets="mainDiv" showLoadingText="false">
 					[X]
 				</s:a>
 			</td>
 			<td><wt:userName /></td>
 			<td>
 				<s:url id="createConnUrl" action="create" namespace="/connection" />
-				<s:a href="%{createConnUrl}" theme="ajax" targets="pageDiv">
+				<s:a href="%{createConnUrl}" theme="ajax" targets="pageDiv" showLoadingText="false">
 					<s:text name="application.top.createConnection" />
 				</s:a>
 			</td>

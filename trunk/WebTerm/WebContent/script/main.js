@@ -8,6 +8,7 @@ var screenHeight = 0;
  resize window function
 --*/
 function resizeWindow() {
+
 	if (document.all) {
 		screenHeight = document.documentElement.clientHeight;
 		screenWidth = document.documentElement.clientWidth;
@@ -22,8 +23,8 @@ function resizeWindow() {
 	var js__page_div = document.getElementById("pageDiv");
 
 	if (js__main_div) {
-		js__page_div.style.width = (screenWidth) + "px";
-		js__side_div.style.height = (screenHeight) + "px";
+		js__main_div.style.width = (screenWidth) + "px";
+		js__main_div.style.height = (screenHeight) + "px";
 	}
 	
 	if (js__top_div) {
@@ -38,6 +39,13 @@ function resizeWindow() {
 		js__page_div.style.width = (screenWidth - 155) + "px";
 		js__page_div.style.height = (screenHeight - 40) + "px";
 	}
+	
 }
 
-YAHOO.util.Event.addListener(window, "resize", resizeWindow);
+//YAHOO.util.Event.addListener(window, "resize", resizeWindow);
+
+function Timer() {
+	resizeWindow();
+	setTimeout("Timer()",1000);
+}
+Timer();
