@@ -8,11 +8,11 @@
     <package name="conneciton" namespace="/connection" extends="struts-default">
 
         <action name="list" class="org.webterm.ui.ConnectionListAction" >
-            <result name="SUCCESS">/includes/listConnections.jsp</result>
+            <result name="SUCCESS">/includes/connection/list.jsp</result>
         </action>
 
         <action name="create" class="org.webterm.ui.ConnectionCreateAction" >
-            <result name="SUCCESS">/includes/listConnections.jsp</result>
+            <result name="SUCCESS">/includes/connection/create.jsp</result>
         </action>
 
     </package>
