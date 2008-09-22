@@ -47,3 +47,44 @@ body {
 	border-style: solid;
 	background-color: #FFFFFF; 
 }
+
+table.topTable {
+	height: 25px;
+	width: 100%;
+	border-style: none;
+	margin: 0px;
+	border-collapse: collapse;
+}
+
+td.topTableTdClose {
+	vertical-align: middle;
+	text-align: center;
+	width: 25px;	
+	height: 25px;
+	min-width: 25px;
+}
+
+td.topTableTdClose a img{
+	margin-top: 3px;
+}
+	
+td.topTableTdUser {
+	width: 50%;
+	height: 25px;
+	text-align: left;
+	white-space: nowrap;
+}
+
+td.topTableTdTools {
+	width: 50%;
+	height: 25px;
+	text-align: right;
+	white-space: nowrap;
+}
+
+a a:link a:visited a:hover a:active {
+	text-decoration: none;
+	color: #336699;
+	font-family: verdana;
+}
+
