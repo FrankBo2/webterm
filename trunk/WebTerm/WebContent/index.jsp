@@ -19,7 +19,7 @@
 </head>
 <body>
 
-<s:div id="mainDiv" theme="ajax">
+<s:div id="mainDiv" cssClass="mainDiv" theme="ajax">
 	<wt:ifUserConnected>
 		<s:include value="/includes/mainApplication.jsp"/>
 	</wt:ifUserConnected>

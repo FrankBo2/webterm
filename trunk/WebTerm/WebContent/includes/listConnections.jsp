@@ -4,11 +4,11 @@
 
 <wt:checkUser/>
 
-test
-
-<p><s:text name="application.side.connections.title"/></p>
-<s:if test="result.processList.size > 0">
-	<table>
+<table>
+	<tr>
+		<td><s:text name="application.side.connections.title"/></td>
+	</tr>
+	<s:if test="result.processList.size > 0">
 		<s:iterator value="result.processList">
 			<tr id="row_<s:property value="id"/>">
 				<td>
@@ -21,5 +21,5 @@ test
 				</td>
 			</tr>
 		</s:iterator>
-	</table>
-</s:if>
+	</s:if>
+</table>
