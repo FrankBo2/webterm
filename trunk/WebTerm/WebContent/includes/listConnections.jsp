@@ -4,6 +4,8 @@
 
 <wt:checkUser/>
 
+test
+
 <p><s:text name="application.side.connections.title"/></p>
 <s:if test="result.processList.size > 0">
 	<table>

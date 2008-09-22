@@ -11,6 +11,11 @@
 	<title><wt:title/></title>
 	<s:head theme="ajax" debug="false"/>
 	<link href="<s:url value="/theme/default/main.css"/>" rel="stylesheet" type="text/css"/>
+	<%-- YUI --%>  
+	<script type="text/javascript" src="<s:url value="/script/yui/yahoo-min.js"/>" ></script> 
+	<script type="text/javascript" src="<s:url value="/script/yui/event-min.js"/>" ></script>
+	<%-- main script --%>  
+	<script type="text/javascript" src="<s:url value="/script/main.js"/>" ></script>
 </head>
 <body>
 
