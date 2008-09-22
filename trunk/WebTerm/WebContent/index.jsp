@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://webterm.org/tags-webterm" prefix="wt"%>
 <%@ taglib uri="/struts-tags"  prefix="s" %>
+<%@ page import="org.webterm.configuration.ConstConfiguration" %>
 <%
 	request.getSession(true);
 %>
@@ -10,7 +11,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title><wt:title/></title>
 	<s:head theme="ajax" debug="false"/>
-	<link href="<s:url value="/theme/default/main.css"/>" rel="stylesheet" type="text/css"/>
+	<link href="<%=request.getContextPath() %>/theme/<%=ConstConfiguration.APPLICATION_THEME %>/main.css" rel="stylesheet" type="text/css"/>
 	<%-- main script --%>  
 	<script type="text/javascript" src="<s:url value="/script/main.js"/>" ></script>
 </head>
