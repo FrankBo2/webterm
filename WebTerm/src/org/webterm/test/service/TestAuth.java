@@ -1,4 +1,4 @@
-package org.webterm.test; // NOPMD - test class
+package org.webterm.test.service; // NOPMD - test class
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
