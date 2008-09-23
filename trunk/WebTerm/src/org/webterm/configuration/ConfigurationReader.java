@@ -59,7 +59,7 @@ public final class ConfigurationReader {
 	 * @return value of the <code>key</code> or null if not found.
 	 */
 	public String getApplicationProperty(final String key) {
-		String result = ConstString.EMPTY; //NOPMD - init
+		String result = ConstString.EMPTY; //NOPMD - initialization
 		try {
 			result = this.bundle.getString(key);
 		} catch (final MissingResourceException ex) {
