@@ -10,17 +10,8 @@ public final class CharacterDescription {
 	/** Character */
 	public char character = ' ';
 	
-	/** Font color */
-	public Color colorFont = Color.WHITE;
-	
-	/** Background color */
-	public Color colorBackground = Color.BLACK;
-	
-	/** True if character blinking */
-	public boolean blink = false;
-	
-	/** True if character underlined */
-	public boolean underlined = false;
+	/** Color description of the character */
+	public CharacterColor color;
 	
 	/**
 	 * Constructor

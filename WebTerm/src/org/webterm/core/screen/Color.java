@@ -42,4 +42,5 @@ public enum Color {
 	private Color(final String htmlCode) {
 		this.htmlCode = htmlCode;
 	}
+
 }
