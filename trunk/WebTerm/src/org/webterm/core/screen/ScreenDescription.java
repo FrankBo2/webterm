@@ -27,13 +27,19 @@ public final class ScreenDescription {
 		this.width = width;
 		
 		this.screen = new CharacterDescription[height][width];
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
+		this.initScreen();
+	}
+	
+	/**
+	 * Initialization of the screen.
+	 */
+	public void initScreen() {
+		for (int i = 0; i < this.height; i++) {
+			for (int j = 0; j < this.width; j++) {
 				this.screen[i][j] = new CharacterDescription(); //NOPMD - initialize
 			}
 		}
 	}
-	
 	/**
 	 * Getter
 	 * 
