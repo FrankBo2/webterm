@@ -127,7 +127,7 @@ public enum CharacterColor {
 	 * @param colCode color code
 	 * @return ColorDescription
 	 */
-	public static CharacterColor findColor(final int colCode) {
+	public static CharacterColor findColor(final char colCode) {
 	    CharacterColor result = map.get(Integer.valueOf(colCode));
 	    if (result == null) {
 	    	result = COLOR_DEFAULT;

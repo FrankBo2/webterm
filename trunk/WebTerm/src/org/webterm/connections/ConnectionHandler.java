@@ -30,6 +30,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.webterm.core.screen.CharacterColor;
 import org.webterm.core.screen.CharacterDescription;
+import org.webterm.core.screen.Color;
 import org.webterm.core.screen.ScreenDescription;
 import org.webterm.term.AbstractTermDescription;
 
@@ -589,7 +590,7 @@ public class ConnectionHandler {
 	                break;
 	                
 	            case (255) :
-	                char esc_ch = (char) fgetc(fp);
+	                char esc_ch = (char) in.read();
 	                if (esc_ch == 255) {
 	                    treatData(esc_ch, log);
 	                } else {
@@ -599,12 +600,12 @@ public class ConnectionHandler {
 	                
 	            default :
 	                if ((ch >= 0x20) && (ch<40)) {
-	                    col = get_color(ch);
-	                    log.append("<= COLOR "+col+"\n");
+	                    CharacterColor col = CharacterColor.findColor(ch);
+	                    log.append("<= COLOR "+col.colorFont.htmlCode+"\n");
 						if (textSend == 1) {
 							textSend = 0;
 						}
-						textHeader = col;
+						textHeader = col.colorFont.htmlCode;
 	                } else {
 	                    treatData(ch, log);
 	                }
