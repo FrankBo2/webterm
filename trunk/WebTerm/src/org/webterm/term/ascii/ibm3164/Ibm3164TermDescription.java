@@ -33,4 +33,25 @@ public final class Ibm3164TermDescription extends AbstractAsciiTermDescription {
 	public Ibm3164TermDescription() {
 		super(ConstIbm3164.TERM_TYPE);
 	}
+
+	/* 
+	 * (non-Javadoc)
+	 * 
+	 * @see org.webterm.term.AbstractTermDescription#getHeight()
+	 */
+	@Override
+	public int getHeight() {
+		return 24;
+	}
+
+	/* 
+	 * (non-Javadoc)
+	 * 
+	 * @see org.webterm.term.AbstractTermDescription#getWidth()
+	 */
+	@Override
+	public int getWidth() {
+		return 80;
+	}
+		
 }

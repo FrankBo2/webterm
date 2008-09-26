@@ -94,4 +94,34 @@ public abstract class AbstractTermDescription { // NOPMD - no abstract method
 	public void setOwner(final String owner) {
 		this.owner = owner;
 	}
+	
+	/**
+	 * Character encoder for sending to host...
+	 * 
+	 * @param character character
+	 * @return encoded character
+	 */
+	abstract public char encode(final char character);
+	
+	/**
+	 * Character decoder for reading to host...
+	 * 
+	 * @param character character
+	 * @return decoded character
+	 */
+	abstract public char decode(final char character);
+	
+	/**
+	 * Getter
+	 * 
+	 * @return terminal screen height
+	 */
+	abstract public int getHeight();
+
+	/**
+	 * Getter
+	 * 
+	 * @return terminal screen width
+	 */
+	abstract public int getWidth();
 }
