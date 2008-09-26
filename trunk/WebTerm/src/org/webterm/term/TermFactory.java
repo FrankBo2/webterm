@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.webterm.term.ascii.ibm3164.Ibm3164TermCreator;
+import org.webterm.term.ebcdic.ibm5250.Ibm5250TermCreator;
 
 /**
  * Factory for terminals.
@@ -60,6 +61,7 @@ public final class TermFactory {
 	private TermFactory() {
 		super();
 		register(Ibm3164TermCreator.getInstance());
+		register(Ibm5250TermCreator.getInstance());
 	}
 
 	/**
