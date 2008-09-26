@@ -18,14 +18,14 @@
  */
 package org.webterm.term.ebcdic.ibm5250;
 
-import org.webterm.term.ascii.AbstractAsciiTermDescription;
+import org.webterm.term.ebcdic.AbstractEbcdicTermDescription;
 
 /**
  * Term description for IBM 5250 ASCII terminal.
  * 
  * @author charles
  */
-public final class Ibm5250TermDescription extends AbstractAsciiTermDescription {
+public final class Ibm5250TermDescription extends AbstractEbcdicTermDescription {
 
 	/**
 	 * Constructor.
@@ -33,4 +33,25 @@ public final class Ibm5250TermDescription extends AbstractAsciiTermDescription {
 	public Ibm5250TermDescription() {
 		super(ConstIbm5250.TERM_TYPE);
 	}
+
+	/* 
+	 * (non-Javadoc)
+	 * 
+	 * @see org.webterm.term.AbstractTermDescription#getHeight()
+	 */
+	@Override
+	public int getHeight() {
+		return 24;
+	}
+
+	/* 
+	 * (non-Javadoc)
+	 * 
+	 * @see org.webterm.term.AbstractTermDescription#getWidth()
+	 */
+	@Override
+	public int getWidth() {
+		return 80;
+	}
+
 }

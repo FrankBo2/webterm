@@ -56,5 +56,31 @@ public abstract class AbstractEbcdicTermDescription extends AbstractTermDescript
 	public void setCharMap(final ICharMap charMap) {
 		this.charMap = charMap;
 	}
+	
+	/** CharMaps for EBCDIC */
+	private static final CharMaps charMaps = CharMaps.getInstance();
+	
+	/** map encoding */
+	private transient final ICharMap map = charMaps.getDefaultCharMap();
+	
+	/* 
+	 * (non-Javadoc)
+	 * 
+	 * @see org.webterm.term.AbstractTermDescription#encode(char)
+	 */
+	@Override
+	public char encode(final char character) {
+		return charMaps.stringEncode(this.map, character);
+	}
+	
+	/* 
+	 * (non-Javadoc)
+	 * 
+	 * @see org.webterm.term.AbstractTermDescription#decode(char)
+	 */
+	@Override
+	public char decode(final char character) {
+		return charMaps.stringDecode(this.map, character);
+	}
 
 }

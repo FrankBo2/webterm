@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import org.webterm.core.screen.CharacterColor;
 import org.webterm.core.screen.CharacterDescription;
 import org.webterm.core.screen.ScreenDescription;
+import org.webterm.term.AbstractTermDescription;
 
 /**
  * Thread for a server connection management.
@@ -44,6 +45,8 @@ public class ConnectionHandler {
 
 	/** Screen description */
 	private transient final ScreenDescription screenDesc;
+	
+	private transient final AbstractTermDescription term;
 	
 	/** Current horizontal position */
 	private int x = 0;
@@ -70,12 +73,13 @@ public class ConnectionHandler {
 	/**
 	 * Constructor
 	 * 
-	 * @param height screen height
-	 * @param width screen width
+	 * @param term Terminal description
+	 * @param socket Socket
 	 */
-	public ConnectionHandler (final int height, final int width, final Socket socket) throws IOException {
-		screenDesc = new ScreenDescription(height, width);
-		
+	public ConnectionHandler (final AbstractTermDescription term, final Socket socket) throws IOException {
+		this.term = term;
+		this.screenDesc = new ScreenDescription(term.getHeight(), term.getWidth());
+			
 		this.in = new BufferedInputStream(socket.getInputStream());
 		this.out = new BufferedOutputStream(socket.getOutputStream());
 	}
@@ -128,7 +132,7 @@ public class ConnectionHandler {
 	    final CharacterDescription cd = screenDesc.get(x, y);
 		cd.color = color;
 
-	    final char ch = charmaps[charmaps["decode"]][serverCh];
+	    final char ch = term.decode(serverCh);
 	    
 	    if ((ch < 32) || (ch > 240)) {
 	    	cd.character = ' ';
@@ -474,7 +478,8 @@ public class ConnectionHandler {
 	                int to_x = in.read();
 	                char todo = (char) in.read();
 	                if (todo > 32) {
-	                    todo = Character.toString((char) charmaps[charmaps["decode"]][todo]);                }
+	                    todo = term.decode(todo);
+	                }
 	                log.append("toY=\""+to_y+"\" toX=\""+to_x+"\" todo=\""+todo+"\"\n");
 					if (textSend == 1) {
 						textSend = 0;
@@ -488,8 +493,10 @@ public class ConnectionHandler {
 	                    case (17) :
 	                        log.append("WRITE TO DISPLAY\n");
 	                        wtd = true;
-	                        char control_char_0 = (char) in.read();
-	                        char control_char_1 =(char)  in.read();
+	                        {
+	                        	final char control_char_0 = (char) in.read();
+	                        	final char control_char_1 =(char)  in.read();
+	                        }
 	                        break;
 	                    
 	                    case (64) :
@@ -502,14 +509,18 @@ public class ConnectionHandler {
 
 	                    case (82) :
 	                        log.append("READ MTD\n");
-	                        control_char_0 = (char) in.read();
-	                        control_char_1 = (char) in.read();
+	                        {
+	                        	final char control_char_0 = (char) in.read();
+	                        	final char control_char_1 =(char)  in.read();
+	                        }
 	                        break;
 	                    
 	                    case (130) :
 	                        log.append("READ MTD\n");
-	                        control_char_0 = (char) in.read();
-	                        control_char_1 = (char) in.read();
+	                        {
+	                        	final char control_char_0 = (char) in.read();
+	                        	final char control_char_1 =(char)  in.read();
+	                        }
 	                        break;
 	                    
 	                    case (243) :
@@ -532,10 +543,8 @@ public class ConnectionHandler {
 	                y = in.read();
 	                x = in.read();
 	                log.append("<= MOVE TO ["+y+";"+x+"] '"+moveToSend+"' \n");
-					if (moveToSend) {
-						if (textSend == 1) {
-							textSend = 0;
-						}
+					if (moveToSend && (textSend == 1)) {
+						textSend = 0;
 					}
 					moveToSend = true;
 	                break;
@@ -702,47 +711,46 @@ public class ConnectionHandler {
 
 	private void answerToWSF() {
 
-	    final char[] answer = new char[] {
-	        Character.toString((char) 0x00),		/* Cursor Row/Column (set to zero) */
-	        Character.toString((char) 0x00),
+	    final String answer = 
+	        Character.toString((char) 0x00)+		/* Cursor Row/Column (set to zero) */
+	        Character.toString((char) 0x00)+
 
-	        Character.toString((char) 0x88),		/* Inbound Write Structured Field Aid */
+	        Character.toString((char) 0x88)+		/* Inbound Write Structured Field Aid */
 
-	        Character.toString((char) 0x00),		/* Length of Query Reply */
-	        Character.toString((char) 0x3A),
+	        Character.toString((char) 0x00)+		/* Length of Query Reply */
+	        Character.toString((char) 0x3A)+
 
-	        Character.toString((char) 0xD9),		/* Command class */
+	        Character.toString((char) 0xD9)+		/* Command class */
 
-	        Character.toString((char) 0x70),		/* Command type - Query */
+	        Character.toString((char) 0x70)+		/* Command type - Query */
 
-	        Character.toString((char) 0x80),		/* Flag byte */
+	        Character.toString((char) 0x80)+		/* Flag byte */
 
-	        Character.toString((char) 0x06),		/* Controller hardware class */
-	        Character.toString((char) 0x00),
+	        Character.toString((char) 0x06)+		/* Controller hardware class */
+	        Character.toString((char) 0x00)+
 
-	        Character.toString((char) 0x01),		/* Controller code level (Version 1 Release 1.0 */
-	        Character.toString((char) 0x01),
-	        Character.toString((char) 0x00),
+	        Character.toString((char) 0x01)+		/* Controller code level (Version 1 Release 1.0 */
+	        Character.toString((char) 0x01)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+		/* Reserved (set to zero) */
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
 
-	        Character.toString((char) 0x00),		/* Reserved (set to zero) */
-	        Character.toString((char) 0x00),
-	        Character.toString((char) 0x00),
-	        Character.toString((char) 0x00),
-	        Character.toString((char) 0x00),
-	        Character.toString((char) 0x00),
-	        Character.toString((char) 0x00),
-	        Character.toString((char) 0x00),
-	        Character.toString((char) 0x00),
-	        Character.toString((char) 0x00),
-	        Character.toString((char) 0x00),
-	        Character.toString((char) 0x00),
-	        Character.toString((char) 0x00),
-	        Character.toString((char) 0x00),
-	        Character.toString((char) 0x00),
-	        Character.toString((char) 0x00),
+	        Character.toString((char) 0x01);		/* 5250 Display or 5250 emulation */
 
-	        Character.toString((char) 0x01)		/* 5250 Display or 5250 emulation */
-	    };
 	    dev_type  = substr(tn5250["var"]["term_type"], 4, 4);
 	    dev_model = Character.toString((char) 0).substr(tn5250["var"]["term_type"], 9);
 
@@ -752,38 +760,38 @@ public class ConnectionHandler {
 
 	    answer +=
 
-	        Character.toString((char) 0x02).		/* Keyboard ID:
+	        Character.toString((char) 0x02)+		/* Keyboard ID:
 					   X'02' = Standard Keyboard
 					   X'82' = G Keyboard */
 
-	        Character.toString((char) 0x00).		/* Extended keyboard ID */
-	        Character.toString((char) 0x00).		/* Reserved */
+	        Character.toString((char) 0x00)+		/* Extended keyboard ID */
+	        Character.toString((char) 0x00)+		/* Reserved */
 
-	        Character.toString((char) 0x00).		/* Display serial number */
-	        Character.toString((char) 0x61).
-	        Character.toString((char) 0x50).
-	        Character.toString((char) 0x00).
+	        Character.toString((char) 0x00)+		/* Display serial number */
+	        Character.toString((char) 0x61)+
+	        Character.toString((char) 0x50)+
+	        Character.toString((char) 0x00)+
 
-	        Character.toString((char) 0xff).		/* Maximum number of input fields (65535) */
-	        Character.toString((char) 0xff).
+	        Character.toString((char) 0xff)+		/* Maximum number of input fields (65535) */
+	        Character.toString((char) 0xff)+
 
-	        Character.toString((char) 0x00).		/* Reserved (set to zero) */
-	        Character.toString((char) 0x00).
-	        Character.toString((char) 0x00).
+	        Character.toString((char) 0x00)+		/* Reserved (set to zero) */
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
 
-	        Character.toString((char) 0x23).		/* Controller/Display Capability */
-	        Character.toString((char) 0x31).
-	        Character.toString((char) 0x00).		/* Reserved */
-	        Character.toString((char) 0x00).
-	        Character.toString((char) 0x00).
+	        Character.toString((char) 0x23)+		/* Controller/Display Capability */
+	        Character.toString((char) 0x31)+
+	        Character.toString((char) 0x00)+		/* Reserved */
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
 
-	        Character.toString((char) 0x00).		/* Reserved (set to zero) */
+	        Character.toString((char) 0x00)+		/* Reserved (set to zero) */
 
-	        Character.toString((char) 0x00).
-	        Character.toString((char) 0x00).
-	        Character.toString((char) 0x00).
-	        Character.toString((char) 0x00).
-	        Character.toString((char) 0x00).
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
+	        Character.toString((char) 0x00)+
 	        Character.toString((char) 0x00);
 
 	    sendToHost(answer, "NoOperation");
