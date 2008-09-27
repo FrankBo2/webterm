@@ -46,6 +46,21 @@ public class ConnectionHandler {
 	/** Logger */
 	private static final Logger LOG = Logger.getLogger(ConnectionHandler.class);
 
+	private static final Map<String, Character> opCodeMap = new HashMap<String, Character>();
+	
+	static {
+		opCodeMap.put("NoOperation", Character.valueOf((char) 0x00)); //$NON-NLS-1$
+		opCodeMap.put("InviteOperation", Character.valueOf((char) 0x01)); //$NON-NLS-1$
+		opCodeMap.put("OutputOnly", Character.valueOf((char) 0x02)); //$NON-NLS-1$
+		opCodeMap.put("PutGetOperation", Character.valueOf((char) 0x03)); //$NON-NLS-1$
+		opCodeMap.put("SaveScreenOperation", Character.valueOf((char) 0x04)); //$NON-NLS-1$
+	    opCodeMap.put("RestoreScreenOperation", Character.valueOf((char) 0x05)); //$NON-NLS-1$
+	    opCodeMap.put("ReadImmediateOperation", Character.valueOf((char) 0x06)); //$NON-NLS-1$
+	    opCodeMap.put("ReadScreenOperation", Character.valueOf((char) 0x08)); //$NON-NLS-1$
+	    opCodeMap.put("CancelInviteOperation", Character.valueOf((char) 0x0A)); //$NON-NLS-1$
+	    opCodeMap.put("TurnOnMessageLight", Character.valueOf((char) 0x0B)); //$NON-NLS-1$
+	    opCodeMap.put("TurnOffMessageLight", Character.valueOf((char) 0x0C)); //$NON-NLS-1$
+	}
 	/** Screen description */
 	private transient final ScreenDescription screenDesc;
 	
@@ -701,7 +716,9 @@ public class ConnectionHandler {
 	            tn5250["connexion"]["queue"]["length"]--;
 	            if (tn5250["connexion"]["queue"]["length"] > 0) {
 	                num++;
-	                fwrite(fp, tn5250["connexion"]["queue"]["queue"][num]["message"]);
+	                for (final char ch : tn5250["connexion"]["queue"]["queue"][num]["message"]) {
+	                	output.write(ch);
+	                }
 	                output.flush();
 	                //echo tn5250["connexion"]["queue"]["queue"][num]["log"];
 	                loop = (tn5250["connexion"]["queue"]["queue"][num]["status"] == "closed");
@@ -713,33 +730,28 @@ public class ConnectionHandler {
 	    return true;
 	}
 
-	private void sendToHost(final String text, final String opcode, final StringBuilder log) {
-	    
+	private void sendToHost(final String text, final String opcode, final StringBuilder log) throws IOException {
 	    final int len = text.length() + 10;
-	    final String length = Character.toString((char) ((len >> 8) & 0xFF))+Character.toString((char) (len & 0xFF));
-
-	    fwrite(fp, length+
-	        Character.toString((char) 0x12)+Character.toString((char) 0xA0)+Character.toString((char) 0)+Character.toString((char) 0)+Character.toString((char) 04)+Character.toString((char) 0)+Character.toString((char) 0)+Character.toString((char) tn5250["opCode"][opcode])+
-	        text+
-	        Character.toString((char) 0xFF)+Character.toString((char) 0xEF)
-	    );
-	    output.flush();
-
-	    final String mesg = length+
-	        Character.toString((char) 0x12)+Character.toString((char) 0xA0)+Character.toString((char) 0)+Character.toString((char) 0)+Character.toString((char) 04)+Character.toString((char) 0)+Character.toString((char) 0)+Character.toString((char) tn5250["opCode"][opcode])+
-	        text+
-	        Character.toString((char) 0xFF)+Character.toString((char) 0xEF);
-
-	    log.append("\n    =>\t");
-	    for (int i = 0; i < mesg.length(); ++i) {
-	    	log.append("["+Integer.toString(mesg.charAt(i), 16)+"]\t");
+	    Character.toString((char) ((len >> 8) & 0xFF));
+	    Character.toString((char) (len & 0xFF));
+	    Character.toString((char) 0x12);
+	    Character.toString((char) 0xA0);
+	    Character.toString((char) 0x00);
+	    Character.toString((char) 0x00);
+	    Character.toString((char) 0x04);
+	    Character.toString((char) 0x00);
+	    Character.toString((char) 0x00);
+	    Character.toString(opCodeMap.get(opcode));
+	    for (final char ch : text.toCharArray()) {
+	        output.write(ch);
 	    }
-	    log.append("\n");
-
+	    Character.toString((char) 0xFF);
+	    Character.toString((char) 0xEF);
+	    output.flush();
 	}
 
 
-	private void answerToWSF(final StringBuilder log) {
+	private void answerToWSF(final StringBuilder log) throws IOException{
 
 	    String answer = 
 	        Character.toString((char) 0x00)+		/* Cursor Row/Column (set to zero) */
