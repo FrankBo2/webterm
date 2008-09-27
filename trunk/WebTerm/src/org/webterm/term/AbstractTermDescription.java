@@ -52,6 +52,13 @@ public abstract class AbstractTermDescription { // NOPMD - no abstract method
 	/**
 	 * Getter
 	 * 
+	 * @return Physical term type (for connection parameter)
+	 */
+	public abstract String getPhysicalTermType();
+
+	/**
+	 * Getter
+	 * 
 	 * @return The Connection description.
 	 */
 	public final ConnectionDescription getConnectionDescription() {

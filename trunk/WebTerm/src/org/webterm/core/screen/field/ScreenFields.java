@@ -16,52 +16,62 @@
  *
  * (C) COPYRIGHT 2008 - Charles FENDT
  */
-package org.webterm.term.ascii.ibm3164;
+package org.webterm.core.screen.field;
 
-import org.webterm.term.ascii.AbstractAsciiTermDescription;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Term description for IBM 3164 ASCII terminal.
- * 
  * @author charles
+ *
  */
-public final class Ibm3164TermDescription extends AbstractAsciiTermDescription {
+public class ScreenFields {
+
+	/** list of fields */
+	transient private final List<FieldProperties> fields = new ArrayList<FieldProperties>();
+	
+	/** Id of active field*/
+	private int active = 0;
+	
+	/**
+	 * Constructor
+	 */
+	public ScreenFields() {
+		super();
+	}
+	
+	/**
+	 * Initialization method in order to clean the list of fileds.
+	 */
+	public void init() {
+		this.fields.clear();
+		this.active = 0;
+	}
 
 	/**
-	 * Constructor.
+	 * Getter
+	 * 
+	 * @return the active
 	 */
-	public Ibm3164TermDescription() {
-		super(ConstIbm3164.TERM_TYPE);
+	public int getActive() {
+		return this.active;
 	}
 
-	/* 
-	 * (non-Javadoc)
+	/**
+	 * Setter
 	 * 
-	 * @see org.webterm.term.AbstractTermDescription#getHeight()
+	 * @param active the active to set
 	 */
-	@Override
-	public int getHeight() {
-		return 24;
+	public void setActive(final int active) {
+		this.active = active;
 	}
 
-	/* 
-	 * (non-Javadoc)
+	/**
+	 * Getter
 	 * 
-	 * @see org.webterm.term.AbstractTermDescription#getWidth()
+	 * @return the fields
 	 */
-	@Override
-	public int getWidth() {
-		return 80;
+	public List<FieldProperties> getFields() {
+		return this.fields;
 	}
-
-	/* 
-	 * (non-Javadoc)
-	 * 
-	 * @see org.webterm.term.AbstractTermDescription#getPhysicalTermType()
-	 */
-	@Override
-	public String getPhysicalTermType() {
-		return ConstIbm3164.PHY_TERM_TYPE;
-	}
-		
 }

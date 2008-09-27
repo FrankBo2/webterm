@@ -54,4 +54,14 @@ public final class Ibm5250TermDescription extends AbstractEbcdicTermDescription 
 		return 80;
 	}
 
+	/* 
+	 * (non-Javadoc)
+	 * 
+	 * @see org.webterm.term.AbstractTermDescription#getPhysicalTermType()
+	 */
+	@Override
+	public String getPhysicalTermType() {
+		return ConstIbm5250.PHY_TERM_TYPE;
+	}
+
 }

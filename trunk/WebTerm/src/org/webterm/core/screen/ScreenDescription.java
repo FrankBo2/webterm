@@ -18,6 +18,8 @@
  */
 package org.webterm.core.screen;
 
+import org.webterm.core.screen.field.ScreenFields;
+
 /**
  * Screen description class.
  * 
@@ -33,6 +35,9 @@ public final class ScreenDescription {
 	
 	/** Screen details */
 	private transient final CharacterDescription[][] screen;
+	
+	/** Fields in the screen */
+	private transient final ScreenFields fields = new ScreenFields();
 	
 	/**
 	 * Constructor
@@ -67,5 +72,14 @@ public final class ScreenDescription {
 	 */
 	public CharacterDescription get(final int x, final int y) { //NOPMD
 		return this.screen[y][x];
+	}
+	
+	/**
+	 * Getter
+	 * 
+	 * @return Fields of the screen
+	 */
+	public ScreenFields getFields() {
+		return this.fields;
 	}
 }

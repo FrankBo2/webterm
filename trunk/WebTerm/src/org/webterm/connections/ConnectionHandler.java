@@ -30,8 +30,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.webterm.core.screen.CharacterColor;
 import org.webterm.core.screen.CharacterDescription;
-import org.webterm.core.screen.Color;
 import org.webterm.core.screen.ScreenDescription;
+import org.webterm.core.screen.field.FieldProperties;
 import org.webterm.term.AbstractTermDescription;
 
 /**
@@ -56,7 +56,7 @@ public class ConnectionHandler {
 	transient private int y = 0;
 	
 	/** Current color */
-	transient private CharacterColor color;
+	transient private CharacterColor col;
 	
 	/** client properties*/
 	private LinkProperties clientProperties = new LinkProperties();
@@ -68,7 +68,6 @@ public class ConnectionHandler {
 	private boolean wtd = false;
 	private boolean moveToSend = false;
 	private int textSend = 0;
-	private String textHeader = "";
 	private boolean reading = false;
 	
 	private transient final InputStream in;
@@ -137,7 +136,7 @@ public class ConnectionHandler {
 
 	private void treatData(final char serverCh, final StringBuilder log) {
 	    final CharacterDescription cd = screenDesc.get(x, y);
-		cd.color = color;
+		cd.color = col;
 
 	    final char ch = term.decode(serverCh);
 	    
@@ -162,7 +161,7 @@ public class ConnectionHandler {
 	    }
 	}
 
-	private void answerIAC(final char query, final StringBuilder log) {
+	private void answerIAC(final char query, final StringBuilder log) throws IOException {
 	    log.append("<= IAC ");
 	    
 	    switch (query) {
@@ -230,8 +229,8 @@ public class ConnectionHandler {
 	                    log.append("IAC ");
 	                    if (in.read() != 240) log.append("\nERROR : waiting for SE command (240)\n");
 	                    log.append("SE\n");
-	                    log.append("\t=> IAC SB TERMINAL-TYPE IS "+tn5250["var"]["term_type"]+" IAC SE\n");
-	                    String mess = Character.toString((char) 255)+Character.toString((char) 250)+Character.toString((char) 24)+Character.toString((char) 0)+tn5250["var"]["term_type"]+Character.toString((char) 255)+Character.toString((char) 240);
+	                    log.append("\t=> IAC SB TERMINAL-TYPE IS "+ term.getPhysicalTermType()+" IAC SE\n");
+	                    String mess = Character.toString((char) 255)+Character.toString((char) 250)+Character.toString((char) 24)+Character.toString((char) 0)+term.getPhysicalTermType()+Character.toString((char) 255)+Character.toString((char) 240);
 	                    sendMessage(type, mess, log);
 	                    closeMessageQueue(type);
 	                }
@@ -241,11 +240,13 @@ public class ConnectionHandler {
 	                case (39) :
 	                
 	                    log.append("NEW-ENVIRON ");
-	                    String type = "NEW-ENVIRON";
+	                    final String type = "NEW-ENVIRON";
 	                    
-	                    if (in.read() != 1) log.append("\nERROR : waiting for SEND command (01)\n");
+	                    if (in.read() != 1) {
+	                    	log.append("\nERROR : waiting for SEND command (01)\n");
+	                    }
 	                    
-	                    StringBuilder out_string = new StringBuilder("\t=> IAC SB NEW-ENVIRON IS ");
+	                    final StringBuilder out_string = new StringBuilder("\t=> IAC SB NEW-ENVIRON IS ");
 	                    String out = Character.toString((char) 255) + Character.toString((char) 250) + Character.toString((char) 39) + Character.toString((char) 0);
 	                    
 	                    char var_type = (char) in.read();
@@ -254,9 +255,9 @@ public class ConnectionHandler {
 	                        char next = (char) in.read();
 	                        switch (var_type) {
 	                            case (0) :
-	                                // var
+	                                // variable
 	                                if ((next > 3) && (next != 255)) {
-	                                    // send juste one var
+	                                    // send just one variable
 	                                    String var_name = "";
 	                                    String var_name_hex = "";
 
@@ -438,7 +439,6 @@ public class ConnectionHandler {
 	private void read(final StringBuilder log) {
 	    boolean nego = true;
 	    this.reading = true;
-
 	    while (this.reading) {
 
 	        char ch = (char) in.read();
@@ -514,7 +514,6 @@ public class ConnectionHandler {
 	                        log.append("CLEAR UNIT\n");
 							moveToSend = false;
 							textSend = 0;
-							textHeader = "";
 							clearScreen();
 	                        break;
 
@@ -565,37 +564,35 @@ public class ConnectionHandler {
 	                what = (char) in.read();
 	                int num = -1;
 	                if ((what & 0x40) != 0) {
+	                	final FieldProperties field = new FieldProperties();
 	                    log.append("FFW ");
-	                    num = tn5250["screen"]["fields"]["next"];
-	                    tn5250["screen"]["fields"]["next"]++;
-	                    tn5250["screen"]["fields"][num] = array();
-	                    tn5250["screen"]["fields"]["activ"][num] = true;
-	                    tn5250["screen"]["fields"][num]["FFW_0"] = what;
-	                    tn5250["screen"]["fields"][num]["FFW_1"] = in.read();
+	                    field.setActive(true);
+	                    field.setFfw0(what);
+	                    field.setFfw1((char) in.read());
+	                    
 	                    what = (char) in.read();
-
 	                    if ((what & 0x80) != 0) {
 	                        log.append("FCW ");
-	                        tn5250["screen"]["fields"][num]["FCW_0"] = what;
-	                        tn5250["screen"]["fields"][num]["FCW_1"] = in.read();
+		                    field.setFcw0(what);
+		                    field.setFcw1((char) in.read());
 	                        what = (char) in.read();
 	                    }
 
-	                    col = get_color(what);
+	                    this.col = CharacterColor.findColor(what);
 	                    len = (in.read() * 256) + in.read();
-
-	                    tn5250["screen"]["fields"][num]["col"] = col;
-	                    tn5250["screen"]["fields"][num]["len"] = len;
+	                    field.setColor(col);
+	                    field.setLength(len);
+	                    
+	                    this.screenDesc.getFields().getFields().add(field);
 						if (textSend == 1) {
 							textSend = 0;
 						}
 	                } else {
-	                    col = get_color((char) in.read());
+	                	this.col = CharacterColor.findColor((char) in.read());
 	                    len = (in.read() * 256) + in.read();
 						if (textSend == 1) {
 							textSend = 0;
 						}
-	                    textHeader += col;
 	                }
 	                break;
 	                
@@ -610,12 +607,11 @@ public class ConnectionHandler {
 	                
 	            default :
 	                if ((ch >= 0x20) && (ch<40)) {
-	                    CharacterColor col = CharacterColor.findColor(ch);
-	                    log.append("<= COLOR "+col.colorFont.htmlCode+"\n");
+	                	this.col = CharacterColor.findColor(ch);
+	                    log.append("<= COLOR "+this.col.colorFont.htmlCode+"\n");
 						if (textSend == 1) {
 							textSend = 0;
 						}
-						textHeader = col.colorFont.htmlCode;
 	                } else {
 	                    treatData(ch, log);
 	                }
@@ -637,7 +633,6 @@ public class ConnectionHandler {
 	    while (!wtd) {
 	    	this.moveToSend = false;
 	    	this.textSend = 0;
-	    	this.textHeader = "";
 	        read(log);
 	    }
 	    LOG.info(log.toString());
@@ -657,15 +652,17 @@ public class ConnectionHandler {
 	    }
 	    num = tn5250["connexion"]["queue"]["open"][type];
 	    if (num == tn5250["connexion"]["queue"]["current"]) {
-	        fwrite(fp, mess);
-	        fflush(fp);
+	    	for (char ch : mess.toCharArray()) {
+	    		out.write(ch);
+	    	}
+	    	out.flush();
 	        //echo log;
 	    }
 	    tn5250["connexion"]["queue"]["queue"][num]["message"] += mess;
 	    tn5250["connexion"]["queue"]["queue"][num]["log"] += log;
 	}
 
-	private void closeMessageQueue(final String type) {
+	private boolean closeMessageQueue(final String type) {
 	    
 	    if (!isset(tn5250["connexion"]["queue"]["open"][type])) {
 	        return false;

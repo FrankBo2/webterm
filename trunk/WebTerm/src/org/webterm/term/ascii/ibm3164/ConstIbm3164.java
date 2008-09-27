@@ -34,4 +34,7 @@ public final class ConstIbm3164 {
 
 	/** Type of Terminal */
 	public static final String TERM_TYPE = "IBM-3164"; //$NON-NLS-1$
+	
+	/** Physical type of terminal */
+	public static final String PHY_TERM_TYPE = "IBM-????-?"; //$NON-NLS-1$ //FIXME
 }
