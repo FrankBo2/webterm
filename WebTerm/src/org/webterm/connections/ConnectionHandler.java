@@ -50,13 +50,19 @@ public class ConnectionHandler {
 	private transient final AbstractTermDescription term;
 	
 	/** Current horizontal position */
-	private int x = 0;
+	transient private int x = 0;
 	
 	/** Current vertical position */
-	private int y = 0;
+	transient private int y = 0;
 	
 	/** Current color */
-	private CharacterColor color;
+	transient private CharacterColor color;
+	
+	/** client properties*/
+	private LinkProperties clientProperties = new LinkProperties();
+	
+	/** server properties*/
+	private LinkProperties serverProperties = new LinkProperties();
 	
 	/** "Write To Display" boolean */
 	private boolean wtd = false;
@@ -343,7 +349,7 @@ public class ConnectionHandler {
 	                    // BINARY
 	                    log.append("BINARY\n");
 	                    String type = "BINARY";
-	                    tn5250["connexion"]["options"]["server"]["BINARY"] = true;
+	                    serverProperties.setBinary(true);
 	                    log.append("\t=> IAC WILL BINARY\n");
 	                    log.append("\t=> IAC DO BINARY\n");
 	                    String mess =  Character.toString((char) 255)+Character.toString((char) 251)+Character.toString((char) 0);
@@ -356,7 +362,7 @@ public class ConnectionHandler {
 	                    // END-OF-RECORD
 	                    log.append("END-OF-RECORD\n");
 	                    type = "END-OF-RECORD";
-	                    tn5250["connexion"]["options"]["server"]["END-OF-RECORD"] = true;
+	                    serverProperties.setEndOfRecord(true);
 	                    log.append("\t=> IAC WILL END-OF-RECORD\n");
 	                    log.append("\t=> IAC DO END-OF-RECORD\n");
 	                    mess =  Character.toString((char) 255)+Character.toString((char) 251)+Character.toString((char) 25);
@@ -383,7 +389,7 @@ public class ConnectionHandler {
 	                // case of END-OF-RECORD
 	                case (0) :
 	                    log.append("BINARY\n");
-	                    tn5250["connexion"]["options"]["client"]["BINARY"] = true;
+	                    clientProperties.setBinary(true);
 	                    break;
 	            
 	                // case of TERMINAL-TYPE
@@ -399,7 +405,7 @@ public class ConnectionHandler {
 	                // case of END-OF-RECORD
 	                case (25) :
 	                    log.append("END-OF-RECORD\n");
-	                    tn5250["connexion"]["options"]["client"]["END-OF-RECORD"] = true;
+	                    clientProperties.setEndOfRecord(true);
 	                    break;
 	                
 	                // case of NEW-ENVIRON
@@ -424,12 +430,16 @@ public class ConnectionHandler {
 	    }
 	}
 
+	/**
+	 * Method to read from the server. The display screen is modified according to readed data.
+	 * 
+	 * @param log Log stringBuilder.
+	 */
 	private void read(final StringBuilder log) {
 	    boolean nego = true;
+	    this.reading = true;
 
-	    reading = true;
-
-	    while ((reading) && (!feof(fp))) {
+	    while (this.reading) {
 
 	        char ch = (char) in.read();
 
@@ -495,8 +505,8 @@ public class ConnectionHandler {
 	                        log.append("WRITE TO DISPLAY\n");
 	                        wtd = true;
 	                        {
-	                        	final char control_char_0 = (char) in.read();
-	                        	final char control_char_1 =(char)  in.read();
+	                        	final char control_char_0 = (char) in.read(); //NOPMD
+	                        	final char control_char_1 =(char)  in.read(); //NOPMD
 	                        }
 	                        break;
 	                    
@@ -511,16 +521,16 @@ public class ConnectionHandler {
 	                    case (82) :
 	                        log.append("READ MTD\n");
 	                        {
-	                        	final char control_char_0 = (char) in.read();
-	                        	final char control_char_1 =(char)  in.read();
+	                        	final char control_char_0 = (char) in.read(); //NOPMD
+	                        	final char control_char_1 =(char)  in.read(); //NOPMD
 	                        }
 	                        break;
 	                    
 	                    case (130) :
 	                        log.append("READ MTD\n");
 	                        {
-	                        	final char control_char_0 = (char) in.read();
-	                        	final char control_char_1 =(char)  in.read();
+	                        	final char control_char_0 = (char) in.read(); //NOPMD
+	                        	final char control_char_1 =(char)  in.read(); //NOPMD
 	                        }
 	                        break;
 	                    
@@ -622,16 +632,15 @@ public class ConnectionHandler {
 	 * Method to read the screen from the socket. 
 	 */
 	public void readScreen() {
-	    wtd = false;
-	    do {
-			moveToSend = false;
-			textSend = 0;
-			textHeader = "";
-			final StringBuilder log = new StringBuilder();
+		final StringBuilder log = new StringBuilder();
+	    this.wtd = false;
+	    while (!wtd) {
+	    	this.moveToSend = false;
+	    	this.textSend = 0;
+	    	this.textHeader = "";
 	        read(log);
-	        LOG.info(log.toString());
-	    } while (!wtd);
-
+	    }
+	    LOG.info(log.toString());
 	}
 
 	private void sendMessage(final String type, final String mess, final StringBuilder log) {
@@ -752,8 +761,8 @@ public class ConnectionHandler {
 
 	        Character.toString((char) 0x01);		/* 5250 Display or 5250 emulation */
 
-	    dev_type  = substr(tn5250["var"]["term_type"], 4, 4);
-	    dev_model = Character.toString((char) 0).substr(tn5250["var"]["term_type"], 9);
+	    final String dev_type  = substr(tn5250["var"]["term_type"], 4, 4);
+	    final String dev_model = Character.toString((char) 0).substr(tn5250["var"]["term_type"], 9);
 
 	    if (strlen(dev_model) == 2) dev_model = Character.toString((char) 0).dev_model;
 
