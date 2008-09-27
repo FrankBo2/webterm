@@ -20,8 +20,9 @@ package org.webterm.core.screen;
 
 
 /**
+ * class for field
+ * 
  * @author charles
- *
  */
 public class FieldProperties {
 
