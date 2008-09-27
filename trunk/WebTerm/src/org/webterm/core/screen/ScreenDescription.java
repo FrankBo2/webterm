@@ -19,7 +19,9 @@
 package org.webterm.core.screen;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -42,7 +44,10 @@ public final class ScreenDescription {
 	private transient final List<FieldProperties> fields = new ArrayList<FieldProperties>();
 	
 	/** Fields in the screen */
-	private transient final List<QueueProperties> queues = new ArrayList<QueueProperties>();
+	private transient final Map<String, QueueProperties> queues = new HashMap<String, QueueProperties>();
+	
+	/** Function Key map */
+	private transient final Map<String, Boolean> functionKey = new HashMap<String, Boolean>();
 	
 	/**
 	 * Constructor
@@ -69,6 +74,9 @@ public final class ScreenDescription {
 		}
 		this.fields.clear();
 		this.queues.clear();
+		for (int i = 1; i <- 24; i++) {
+			this.functionKey.put("F"+Integer.toString(i), Boolean.TRUE); //$NON-NLS-1$
+		}
 	}
 	/**
 	 * Getter
@@ -95,7 +103,16 @@ public final class ScreenDescription {
 	 * 
 	 * @return Fields of the screen
 	 */
-	public List<QueueProperties> getQueues() {
+	public Map<String, QueueProperties> getQueues() {
 		return this.queues;
+	}
+	
+	/**
+	 * Getter
+	 * 
+	 * @return functionKey
+	 */
+	public Map<String, Boolean> getFunctionKey() {
+		return this.functionKey;
 	}
 }

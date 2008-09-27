@@ -18,13 +18,26 @@
  */
 package org.webterm.core.screen;
 
+import org.webterm.core.ConstString;
+
 /**
+ * Class for queue
+ * 
  * @author charles
  */
 public class QueueProperties {
 	
-	/** Id of active field*/
-	private int active = 0;
+	/** message */
+    private String message = ConstString.EMPTY;
+	
+	/** log */
+    private String log = ConstString.EMPTY;
+	
+	/** type */
+    private String type = ConstString.EMPTY;
+	
+	/** statut */
+    private String status = ConstString.EMPTY;
 	
 	/**
 	 * Constructor
@@ -36,18 +49,73 @@ public class QueueProperties {
 	/**
 	 * Getter
 	 * 
-	 * @return the active
+	 * @return the message
 	 */
-	public int getActive() {
-		return this.active;
+	public String getMessage() {
+		return this.message;
 	}
 
 	/**
 	 * Setter
 	 * 
-	 * @param active the active to set
+	 * @param message the message to set
 	 */
-	public void setActive(final int active) {
-		this.active = active;
+	public void setMessage(final String message) {
+		this.message = message;
 	}
+
+	/**
+	 * Getter
+	 * 
+	 * @return the log
+	 */
+	public String getLog() {
+		return this.log;
+	}
+
+	/**
+	 * Setter
+	 * 
+	 * @param log the log to set
+	 */
+	public void setLog(final String log) {
+		this.log = log;
+	}
+
+	/**
+	 * Getter
+	 * 
+	 * @return the type
+	 */
+	public String getType() {
+		return this.type;
+	}
+
+	/**
+	 * Setter
+	 * 
+	 * @param type the type to set
+	 */
+	public void setType(final String type) {
+		this.type = type;
+	}
+
+	/**
+	 * Getter
+	 * 
+	 * @return the status
+	 */
+	public String getStatus() {
+		return this.status;
+	}
+
+	/**
+	 * Setter
+	 * 
+	 * @param status the status to set
+	 */
+	public void setStatus(final String status) {
+		this.status = status;
+	}
+
 }
