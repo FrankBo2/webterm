@@ -115,7 +115,7 @@ public final class CharMaps {
 	 * Method to convert client String
 	 * 
 	 * @param map CharMap for conversion
-	 * @param character String to convert
+	 * @param character character to convert
 	 * @return character in the host char encoding
 	 */
 	public char stringEncode(final ICharMap map, final char character) {
@@ -136,6 +136,40 @@ public final class CharMaps {
 	}
 
 	/**
+	 * Method to convert client String
+	 * 
+	 * @param map CharMap for conversion
+	 * @param str String to convert
+	 * @return String in the host char encoding
+	 */
+	public String stringEncode(final ICharMap map, final String str) {
+		final char[] encoder = map.getEncoder(); // NOPMD -init
+		final int len = str.length();
+		final StringBuilder result = new StringBuilder(len);
+		for (final char character : str.toCharArray()) {
+			result.append(encoder[character]);
+		}
+		return result.toString();
+}
+	
+	/**
+	 * Method to convert host String
+	 * 
+	 * @param map CharMap for conversion
+	 * @param str string to convert
+	 * @return string in the client char encoding
+	 */
+	public String stringDecode(final ICharMap map, final String str) {
+		final char[] decoder = map.getDecoder(); // NOPMD - init
+		final int len = str.length();
+		final StringBuilder result = new StringBuilder(len);
+		for (final char character : str.toCharArray()) {
+			result.append(decoder[character]);
+		}
+		return result.toString();
+	}
+	
+	/**
 	 * Getter
 	 * 
 	 * @return default charMap
@@ -143,4 +177,5 @@ public final class CharMaps {
 	public ICharMap getDefaultCharMap() {
 		return this.defaultCharMap;
 	}
+
 }

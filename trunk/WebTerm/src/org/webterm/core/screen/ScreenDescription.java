@@ -18,7 +18,9 @@
  */
 package org.webterm.core.screen;
 
-import org.webterm.core.screen.field.ScreenFields;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Screen description class.
@@ -37,7 +39,10 @@ public final class ScreenDescription {
 	private transient final CharacterDescription[][] screen;
 	
 	/** Fields in the screen */
-	private transient final ScreenFields fields = new ScreenFields();
+	private transient final List<FieldProperties> fields = new ArrayList<FieldProperties>();
+	
+	/** Fields in the screen */
+	private transient final List<QueueProperties> queues = new ArrayList<QueueProperties>();
 	
 	/**
 	 * Constructor
@@ -62,6 +67,8 @@ public final class ScreenDescription {
 				this.screen[i][j] = new CharacterDescription(); //NOPMD - initialize
 			}
 		}
+		this.fields.clear();
+		this.queues.clear();
 	}
 	/**
 	 * Getter
@@ -79,7 +86,16 @@ public final class ScreenDescription {
 	 * 
 	 * @return Fields of the screen
 	 */
-	public ScreenFields getFields() {
+	public List<FieldProperties> getFields() {
 		return this.fields;
+	}
+	
+	/**
+	 * Getter
+	 * 
+	 * @return Fields of the screen
+	 */
+	public List<QueueProperties> getQueues() {
+		return this.queues;
 	}
 }

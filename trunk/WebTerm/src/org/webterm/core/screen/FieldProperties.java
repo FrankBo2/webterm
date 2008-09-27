@@ -16,9 +16,8 @@
  *
  * (C) COPYRIGHT 2008 - Charles FENDT
  */
-package org.webterm.core.screen.field;
+package org.webterm.core.screen;
 
-import org.webterm.core.screen.CharacterColor;
 
 /**
  * @author charles

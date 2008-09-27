@@ -16,19 +16,12 @@
  *
  * (C) COPYRIGHT 2008 - Charles FENDT
  */
-package org.webterm.core.screen.field;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.webterm.core.screen;
 
 /**
  * @author charles
- *
  */
-public class ScreenFields {
-
-	/** list of fields */
-	transient private final List<FieldProperties> fields = new ArrayList<FieldProperties>();
+public class QueueProperties {
 	
 	/** Id of active field*/
 	private int active = 0;
@@ -36,16 +29,8 @@ public class ScreenFields {
 	/**
 	 * Constructor
 	 */
-	public ScreenFields() {
+	public QueueProperties() {
 		super();
-	}
-	
-	/**
-	 * Initialization method in order to clean the list of fileds.
-	 */
-	public void init() {
-		this.fields.clear();
-		this.active = 0;
 	}
 
 	/**
@@ -64,14 +49,5 @@ public class ScreenFields {
 	 */
 	public void setActive(final int active) {
 		this.active = active;
-	}
-
-	/**
-	 * Getter
-	 * 
-	 * @return the fields
-	 */
-	public List<FieldProperties> getFields() {
-		return this.fields;
 	}
 }
