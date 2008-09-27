@@ -119,6 +119,22 @@ public abstract class AbstractTermDescription { // NOPMD - no abstract method
 	abstract public char decode(final char character);
 	
 	/**
+	 * String encoder
+	 * 
+	 * @param str string to encode
+	 * @return encoded string
+	 */
+	abstract public String encode(final String str);
+	
+	/**
+	 * String decoder
+	 * 
+	 * @param str string to decode
+	 * @return decoded string
+	 */
+	abstract public String decode(final String str);
+	
+	/**
 	 * Getter
 	 * 
 	 * @return terminal screen height

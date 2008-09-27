@@ -82,5 +82,25 @@ public abstract class AbstractEbcdicTermDescription extends AbstractTermDescript
 	public char decode(final char character) {
 		return charMaps.stringDecode(this.map, character);
 	}
+	
+	/* 
+	 * (non-Javadoc)
+	 * 
+	 * @see org.webterm.term.AbstractTermDescription#encode(java.lang.String)
+	 */
+	@Override
+	public String encode(final String str) {
+		return charMaps.stringDecode(this.map, str);
+	}
+	
+	/* 
+	 * (non-Javadoc)
+	 * 
+	 * @see org.webterm.term.AbstractTermDescription#decode(java.lang.String)
+	 */
+	@Override
+	public String decode(final String str) {
+		return charMaps.stringDecode(this.map, str);
+	}
 
 }

@@ -30,8 +30,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.webterm.core.screen.CharacterColor;
 import org.webterm.core.screen.CharacterDescription;
+import org.webterm.core.screen.FieldProperties;
 import org.webterm.core.screen.ScreenDescription;
-import org.webterm.core.screen.field.FieldProperties;
 import org.webterm.term.AbstractTermDescription;
 
 /**
@@ -583,7 +583,7 @@ public class ConnectionHandler {
 	                    field.setColor(col);
 	                    field.setLength(len);
 	                    
-	                    this.screenDesc.getFields().getFields().add(field);
+	                    this.screenDesc.getFields().add(field);
 						if (textSend == 1) {
 							textSend = 0;
 						}
@@ -690,7 +690,7 @@ public class ConnectionHandler {
 	    return true;
 	}
 
-	private void sendToHost(final String text, final char opcode) {
+	private void sendToHost(final String text, final String opcode) {
 	    
 	    int len = text.length() + 10;
 	    String length = Character.toString((char) ((len >> 8) & 0xFF))+Character.toString((char) (len & 0xFF));
@@ -718,7 +718,7 @@ public class ConnectionHandler {
 
 	private void answerToWSF() {
 
-	    final String answer = 
+	    String answer = 
 	        Character.toString((char) 0x00)+		/* Cursor Row/Column (set to zero) */
 	        Character.toString((char) 0x00)+
 
@@ -758,12 +758,14 @@ public class ConnectionHandler {
 
 	        Character.toString((char) 0x01);		/* 5250 Display or 5250 emulation */
 
-	    final String dev_type  = substr(tn5250["var"]["term_type"], 4, 4);
-	    final String dev_model = Character.toString((char) 0).substr(tn5250["var"]["term_type"], 9);
+	    final String dev_type  = term.getPhysicalTermType().substring(4, 8);
+	    String dev_model = Character.toString((char) 0) + term.getPhysicalTermType().substring(9);
 
-	    if (strlen(dev_model) == 2) dev_model = Character.toString((char) 0).dev_model;
+	    if (dev_model.length() == 2) {
+	    	dev_model = Character.toString((char) 0)+dev_model;
+	    }
 
-	    answer += convert_string_to_host(dev_type.dev_model);
+	    answer += term.encode(dev_type+dev_model);
 
 	    answer +=
 

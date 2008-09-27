@@ -55,5 +55,25 @@ public abstract class AbstractAsciiTermDescription extends AbstractTermDescripti
 	public char decode(final char character) {
 		return character;
 	}
+	
+	/* 
+	 * (non-Javadoc)
+	 * 
+	 * @see org.webterm.term.AbstractTermDescription#encode(java.lang.String)
+	 */
+	@Override
+	public String encode(final String str) {
+		return str;
+	}
+	
+	/* 
+	 * (non-Javadoc)
+	 * 
+	 * @see org.webterm.term.AbstractTermDescription#decode(java.lang.String)
+	 */
+	@Override
+	public String decode(final String str) {
+		return str;
+	}
 
 }
