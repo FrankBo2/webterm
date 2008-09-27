@@ -32,7 +32,7 @@ public interface ITermCreator<T extends AbstractTermDescription> {
 	 * @return Type of terminal
 	 */
 	String getTermType();
-
+	
 	/**
 	 * This methode provide a brand new instance of <T>.
 	 * 

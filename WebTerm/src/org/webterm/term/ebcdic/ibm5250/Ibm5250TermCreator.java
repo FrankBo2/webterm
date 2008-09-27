@@ -27,13 +27,13 @@ import org.webterm.term.ITermCreator;
  */
 public final class Ibm5250TermCreator implements ITermCreator<Ibm5250TermDescription> {
 
-	/** Unic instance of the class */
+	/** Unique instance of the class */
 	private static final Ibm5250TermCreator instance = new Ibm5250TermCreator();
 
 	/**
 	 * Getter
 	 * 
-	 * @return Unic instance of the class
+	 * @return Unique instance of the class
 	 */
 	public static Ibm5250TermCreator getInstance() {
 		return instance;

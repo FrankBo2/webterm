@@ -92,7 +92,7 @@ public enum CharacterColor {
 	/** color */
     COLOR_0x3F(Color.BLACK, false, false, Color.BLACK),
 	/** color */
-    COLOR_DEFAULT(Color.BLACK, false, false, Color.BLACK);
+    COLOR_DEFAULT(Color.GREEN, false, false, Color.BLACK);
 
 	/** Font color */
 	public transient final Color colorFont;
