@@ -32,7 +32,6 @@ import org.webterm.core.ConstString;
 import org.webterm.core.screen.CharacterColor;
 import org.webterm.core.screen.CharacterDescription;
 import org.webterm.core.screen.FieldProperties;
-import org.webterm.core.screen.QueueProperties;
 import org.webterm.core.screen.ScreenDescription;
 import org.webterm.term.AbstractTermDescription;
 
@@ -46,6 +45,7 @@ public class ConnectionHandler {
 	/** Logger */
 	private static final Logger LOG = Logger.getLogger(ConnectionHandler.class);
 
+	/** char for opcode map */
 	private static final Map<String, Character> opCodeMap = new HashMap<String, Character>();
 	
 	static {
@@ -77,10 +77,10 @@ public class ConnectionHandler {
 	transient private CharacterColor col;
 	
 	/** client properties*/
-	transient private LinkProperties clientProperties = new LinkProperties();
+	transient private final LinkProperties clientProperties = new LinkProperties();
 	
 	/** server properties*/
-	transient private LinkProperties serverProperties = new LinkProperties();
+	transient private final LinkProperties serverProperties = new LinkProperties();
 	
 	/** "Write To Display" boolean */
 	transient private boolean wtd = false;
@@ -106,6 +106,7 @@ public class ConnectionHandler {
 	 * 
 	 * @param term Terminal description
 	 * @param socket Socket
+	 * @throws IOException 
 	 */
 	public ConnectionHandler (final AbstractTermDescription term, final Socket socket) throws IOException {
 		this.term = term;
@@ -119,9 +120,9 @@ public class ConnectionHandler {
 	 * Method to clear the screen
 	 */
 	public void clearScreen() {
-		screenX = 0;
-		screenY = 0;
-		screenDesc.initScreen();
+		this.screenX = 0;
+		this.screenY = 0;
+		this.screenDesc.initScreen();
 	}
 	
 	/**
@@ -134,15 +135,15 @@ public class ConnectionHandler {
 		final StringBuilder screen = new StringBuilder();
 	    screen.append("\r\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#000000\">\r\n"); //$NON-NLS-1$
 	    screen.append("<tr>\r\n\t<td><font color=\"#000000\">|</font></td>"); //$NON-NLS-1$
-	    for (int i = 0; i < screenDesc.width; i++) {
+	    for (int i = 0; i < this.screenDesc.width; i++) {
 	        screen.append("<td><font color=\"#000000\">_</font></td>"); //$NON-NLS-1$
 	    }
 	    screen.append("<td><font color=\"#000000\">|</font></td>\r\n</tr>"); //$NON-NLS-1$
 	   
-	    for (int j = 0; j < screenDesc.height; j++) {
+	    for (int j = 0; j < this.screenDesc.height; j++) {
 	        screen.append("<tr>\r\n\t<td><font color=\"#000000\">|</font></td>"); //$NON-NLS-1$
-		    for (int i = 0; i < screenDesc.width; i++) {
-		    	final CharacterDescription charDesc = screenDesc.get(i, j);
+		    for (int i = 0; i < this.screenDesc.width; i++) {
+		    	final CharacterDescription charDesc = this.screenDesc.get(i, j);
 	            screen.append("<td gbcolor=\""); //$NON-NLS-1$
 	            screen.append(charDesc.color.colorBackground.htmlCode);
 	    	    screen.append("\"><font color=\""); //$NON-NLS-1$
@@ -159,11 +160,17 @@ public class ConnectionHandler {
 	    return screen.toString();
 	}
 
+	/**
+	 * Treatment method
+	 * 
+	 * @param serverCh
+	 * @param log
+	 */
 	private void treatData(final char serverCh, final StringBuilder log) {
-	    final CharacterDescription cd = screenDesc.get(screenX, screenY);
-		cd.color = col;
+	    final CharacterDescription cd = this.screenDesc.get(this.screenX, this.screenY);
+		cd.color = this.col;
 
-	    final char ch = term.decode(serverCh);
+	    final char ch = this.term.decode(serverCh);
 	    
 	    if ((ch < 32) || (ch > 240)) {
 	    	cd.character = ' ';
@@ -186,6 +193,13 @@ public class ConnectionHandler {
 	    }
 	}
 
+	/**
+	 * response method
+	 * 
+	 * @param query
+	 * @param log
+	 * @throws IOException
+	 */
 	private void answerIAC(final char query, final StringBuilder log) throws IOException {
 	    log.append("<= IAC "); //$NON-NLS-1$
 	    
@@ -193,7 +207,7 @@ public class ConnectionHandler {
 	    
 	        case (239) :
 	            log.append("EOR\n"); //$NON-NLS-1$
-	            reading = false;
+	        	this.reading = false;
 	            break;
 	            
 	        case (240) :
@@ -240,7 +254,7 @@ public class ConnectionHandler {
 	        case (250) :
 	            log.append("SB "); //$NON-NLS-1$
 	            
-	        	char what = (char) input.read();
+	        	char what = (char) this.input.read();
 	            switch (what) {
 	            
 	                // case of TERMINAL-TYPE
@@ -248,20 +262,20 @@ public class ConnectionHandler {
 	                {
 	                    log.append("TERMINAL-TYPE "); //$NON-NLS-1$
 	                    final String type = "TERMINAL-TYPE"; //$NON-NLS-1$
-	                    if (input.read() != 1) {
+	                    if (this.input.read() != 1) {
 	                    	log.append("\nERROR : waiting for SEND command (01)\n"); //$NON-NLS-1$
 	                    }
 	                    log.append("SEND "); //$NON-NLS-1$
-	                    if (input.read() != 255) {
+	                    if (this.input.read() != 255) {
 	                    	log.append("\nERROR : waiting for IAC command (255)\n"); //$NON-NLS-1$
 	                    }
 	                    log.append("IAC "); //$NON-NLS-1$
-	                    if (input.read() != 240) {
+	                    if (this.input.read() != 240) {
 	                    	log.append("\nERROR : waiting for SE command (240)\n"); //$NON-NLS-1$
 	                    }
 	                    log.append("SE\n"); //$NON-NLS-1$
-	                    log.append("\t=> IAC SB TERMINAL-TYPE IS "+ term.getPhysicalTermType()+" IAC SE\n"); //$NON-NLS-1$ //$NON-NLS-2$
-	                    final String mess = Character.toString((char) 255)+Character.toString((char) 250)+Character.toString((char) 24)+Character.toString((char) 0)+term.getPhysicalTermType()+Character.toString((char) 255)+Character.toString((char) 240);
+	                    log.append("\t=> IAC SB TERMINAL-TYPE IS "+ this.term.getPhysicalTermType()+" IAC SE\n"); //$NON-NLS-1$ //$NON-NLS-2$
+	                    final String mess = Character.toString((char) 255)+Character.toString((char) 250)+Character.toString((char) 24)+Character.toString((char) 0)+this.term.getPhysicalTermType()+Character.toString((char) 255)+Character.toString((char) 240);
 	                    sendMessage(type, mess, log);
 	                    closeMessageQueue(type);
 	                }
@@ -273,17 +287,17 @@ public class ConnectionHandler {
 	                    log.append("NEW-ENVIRON "); //$NON-NLS-1$
 	                    final String type = "NEW-ENVIRON"; //$NON-NLS-1$
 	                    
-	                    if (input.read() != 1) {
+	                    if (this.input.read() != 1) {
 	                    	log.append("\nERROR : waiting for SEND command (01)\n"); //$NON-NLS-1$
 	                    }
 	                    
 	                    final StringBuilder out_string = new StringBuilder("\t=> IAC SB NEW-ENVIRON IS "); //$NON-NLS-1$
 	                    String out = Character.toString((char) 255) + Character.toString((char) 250) + Character.toString((char) 39) + Character.toString((char) 0);
 	                    
-	                    char var_type = (char) input.read();
+	                    char var_type = (char) this.input.read();
 	                    
 	                    while (var_type != 255) {
-	                        char next = (char) input.read();
+	                        char next = (char) this.input.read();
 	                        switch (var_type) {
 	                            case (0) :
 	                                // variable
@@ -296,24 +310,24 @@ public class ConnectionHandler {
 	                
 	                                        var_name += Character.toString((char) next);
 	                                        var_name_hex += String.format("%2X", next);
-	                                        next = (char) input.read();
+	                                        next = (char) this.input.read();
 	                    
 	                                    }
 	                     
 	                                    log.append("VAR "+var_name+"["+var_name_hex+"] ");
 	       
-	                                    if (envVar.containsKey(var_name)) {
+	                                    if (this.envVar.containsKey(var_name)) {
 
 	                                        out_string.append("VAR "+var_name+" VALUE ");
 	                                        out += Character.toString((char) 0)+var_name+Character.toString((char) 1);
-	                                        out_string.append(envVar.get(var_name) + " ");
-	                                        out += envVar.get(var_name);
+	                                        out_string.append(this.envVar.get(var_name) + " ");
+	                                        out += this.envVar.get(var_name);
 	                                    }
 	                                } else {
 	                                    // send all uservar
 	                                    log.append("VAR ");
-	                                    for (final String name : envVar.keySet()) {
-	                                    	final String value = envVar.get(name);
+	                                    for (final String name : this.envVar.keySet()) {
+	                                    	final String value = this.envVar.get(name);
 	                                         out_string.append("VAR "+name+" VALUE "+value+" ");
 	                                        out += Character.toString((char) 0)+name+Character.toString((char) 1)+value;
 	                                    }
@@ -323,26 +337,26 @@ public class ConnectionHandler {
 	                                // user variable
 	                                if ((next > 3) && (next != 255)) {
 	                                    // send just one user variable
-	                                    String uservar_name = "";
-	                                    String uservar_name_hex = "";
+	                                    String uservar_name = ConstString.EMPTY;
+	                                    String uservar_name_hex = ConstString.EMPTY;
 	                                    while ((next > 3) && (next != 255)) {
 	                                        uservar_name += Character.toString((char) next);
 	                                        uservar_name_hex += String.format("%2X", next);
-	                                        next = (char) input.read();
+	                                        next = (char) this.input.read();
 	                                    }
 	                                    log.append("USERVAR "+uservar_name+"["+uservar_name_hex+"] ");
-	                                    if (usrVar.containsKey(uservar_name)) {
+	                                    if (this.usrVar.containsKey(uservar_name)) {
 	                                        out_string.append("USERVAR "+uservar_name+" VALUE ");
 	                                        out += Character.toString((char) 3)+uservar_name+Character.toString((char) 1);
-	                                        out_string.append(usrVar.get(uservar_name) + " ");
-	                                        out += usrVar.get(uservar_name);
+	                                        out_string.append(this.usrVar.get(uservar_name) + " ");
+	                                        out += this.usrVar.get(uservar_name);
 	                                    }
 
 	                                } else {
 	                                    // send all uservar
 	                                    log.append("USERVAR ");
-	                                    for (final String name : usrVar.keySet()) {
-	                                    	final String value = usrVar.get(name);
+	                                    for (final String name : this.usrVar.keySet()) {
+	                                    	final String value = this.usrVar.get(name);
 	                                        out_string.append("USERVAR "+name+" VALUE "+value+" ");
 	                                        out += Character.toString((char) 3)+name+Character.toString((char) 1)+value;
 	                                    }
@@ -355,7 +369,7 @@ public class ConnectionHandler {
 	                    }
 	                    
 	                    log.append("IAC "); //$NON-NLS-1$
-	                    if (input.read() != 240) {
+	                    if (this.input.read() != 240) {
 	                    	log.append("\nERROR : waiting for SE command (240)\n");
 	                    }
 	                    log.append("SE\n"); //$NON-NLS-1$
@@ -376,14 +390,14 @@ public class ConnectionHandler {
 	            
 	        case (251) :
 	            log.append("WILL "); //$NON-NLS-1$
-	            what = (char) input.read();
+	            what = (char) this.input.read();
 	            switch (what) {
 	                  
 	                case (0) :
 	                    // BINARY
 	                    log.append("BINARY\n"); //$NON-NLS-1$
 	                    String type = "BINARY"; //$NON-NLS-1$
-	                    serverProperties.setBinary(true);
+	                    this.serverProperties.setBinary(true);
 	                    log.append("\t=> IAC WILL BINARY\n"); //$NON-NLS-1$
 	                    log.append("\t=> IAC DO BINARY\n"); //$NON-NLS-1$
 	                    String mess =  Character.toString((char) 255)+Character.toString((char) 251)+Character.toString((char) 0);
@@ -396,7 +410,7 @@ public class ConnectionHandler {
 	                    // END-OF-RECORD
 	                    log.append("END-OF-RECORD\n"); //$NON-NLS-1$
 	                    type = "END-OF-RECORD"; //$NON-NLS-1$
-	                    serverProperties.setEndOfRecord(true);
+	                    this.serverProperties.setEndOfRecord(true);
 	                    log.append("\t=> IAC WILL END-OF-RECORD\n"); //$NON-NLS-1$
 	                    log.append("\t=> IAC DO END-OF-RECORD\n"); //$NON-NLS-1$
 	                    mess =  Character.toString((char) 255)+Character.toString((char) 251)+Character.toString((char) 25);
@@ -417,13 +431,13 @@ public class ConnectionHandler {
 	        case (253) :
 	            log.append("DO "); //$NON-NLS-1$
 	            
-	            what = (char) input.read();
+	            what = (char) this.input.read();
 	            switch (what) {
 
 	                // case of END-OF-RECORD
 	                case (0) :
 	                    log.append("BINARY\n"); //$NON-NLS-1$
-	                    clientProperties.setBinary(true);
+	                this.clientProperties.setBinary(true);
 	                    break;
 	            
 	                // case of TERMINAL-TYPE
@@ -439,7 +453,7 @@ public class ConnectionHandler {
 	                // case of END-OF-RECORD
 	                case (25) :
 	                    log.append("END-OF-RECORD\n"); //$NON-NLS-1$
-	                    clientProperties.setEndOfRecord(true);
+	                	this.clientProperties.setEndOfRecord(true);
 	                    break;
 	                
 	                // case of NEW-ENVIRON
@@ -468,25 +482,26 @@ public class ConnectionHandler {
 	 * Method to read from the server. The display screen is modified according to reed data.
 	 * 
 	 * @param log Log stringBuilder.
+	 * @throws IOException 
 	 */
 	private void read(final StringBuilder log) throws IOException {
 	    boolean nego = true;
 	    this.reading = true;
 	    while (this.reading) {
 
-	        char ch = (char) input.read();
+	        char ch = (char) this.input.read();
 
 	        if ((ch != 255) && nego) {
 	            nego = false;
-	            final int len = (ch * 256) + input.read();
+	            final int len = (ch * 256) + this.input.read();
 	            log.append("Length = " + len + "\n");
 
 	            for (int i = 0; i < 7; ++i) {
-	                log.append(String.format("%2X ", input.read()));
+	                log.append(String.format("%2X ", this.input.read()));
 	            }    
-	            final char opcode = (char) input.read();
+	            final char opcode = (char) this.input.read();
 	            log.append("\nopCode = "+opcode+"\n");
-	            ch = (char) input.read();
+	            ch = (char) this.input.read();
 	        }
 
 
@@ -495,26 +510,26 @@ public class ConnectionHandler {
 	        
 	            case (1) :
 	                log.append("<= SOH ");
-	                int len = input.read();
+	                int len = this.input.read();
 	                log.append(String.format("%2X", len));
 	                if ((len > 7) || (len == 0)) {
 	                	len = 4;
 	                }
 	                if (len > 0) {
-	                	log.append(String.format("%2X", input.read()));
+	                	log.append(String.format("%2X", this.input.read()));
 	                }
 	                if (len > 1) {
-	                	log.append(String.format("%2X", input.read()));
+	                	log.append(String.format("%2X", this.input.read()));
 	                }
 	                if (len > 2) {
-	                	log.append(String.format("%2X", input.read()));
+	                	log.append(String.format("%2X", this.input.read()));
 	                }
-	                final char error_line = (char) input.read();
+	                final char error_line = (char) this.input.read();
 	                log.append(String.format("%2X", error_line));
 	                for (int i = 2; i >= 0; i--) {
 	                    char flag = 255;
 	                    if (len > (6 - i)) {
-	                        flag = (char) input.read();
+	                        flag = (char) this.input.read();
 	                        log.append(String.format("%2X", flag));
 	                    }
 	                    for (int j = 7; j >=0; j--) {
@@ -526,60 +541,60 @@ public class ConnectionHandler {
 
 	            case (2) :
 	                log.append("<= REPEAT ");
-	                final int to_y = input.read();
-	                final int to_x = input.read();
-	                char todo = (char) input.read();
+	                final int to_y = this.input.read();
+	                final int to_x = this.input.read();
+	                char todo = (char) this.input.read();
 	                if (todo > 32) {
-	                    todo = term.decode(todo);
+	                    todo = this.term.decode(todo);
 	                }
 	                log.append("toY=\""+to_y+"\" toX=\""+to_x+"\" todo=\""+todo+"\"\n");
-					if (textSend == 1) {
-						textSend = 0;
+					if (this.textSend == 1) {
+						this.textSend = 0;
 					}
 	                break;
 	                            case (4) :
 	                log.append("<= ESC ");
-	                char what = (char) input.read();
+	                char what = (char) this.input.read();
 	                switch (what) {
 
 	                    case (17) :
 	                        log.append("WRITE TO DISPLAY\n");
-	                        wtd = true;
+	                    this.wtd = true;
 	                        {
-	                        	final char control_char_0 = (char) input.read(); //NOPMD
-	                        	final char control_char_1 =(char)  input.read(); //NOPMD
+	                        	final char control_char_0 = (char) this.input.read(); //NOPMD
+	                        	final char control_char_1 = (char) this.input.read(); //NOPMD
 	                        }
 	                        break;
 	                    
 	                    case (64) :
 	                        log.append("CLEAR UNIT\n");
-							moveToSend = false;
-							textSend = 0;
+	                    	this.moveToSend = false;
+							this.textSend = 0;
 							clearScreen();
 	                        break;
 
 	                    case (82) :
 	                        log.append("READ MTD\n");
 	                        {
-	                        	final char control_char_0 = (char) input.read(); //NOPMD
-	                        	final char control_char_1 =(char)  input.read(); //NOPMD
+	                        	final char control_char_0 = (char) this.input.read(); //NOPMD
+	                        	final char control_char_1 =(char)  this.input.read(); //NOPMD
 	                        }
 	                        break;
 	                    
 	                    case (130) :
 	                        log.append("READ MTD\n");
 	                        {
-	                        	final char control_char_0 = (char) input.read(); //NOPMD
-	                        	final char control_char_1 =(char)  input.read(); //NOPMD
+	                        	final char control_char_0 = (char) this.input.read(); //NOPMD
+	                        	final char control_char_1 =(char)  this.input.read(); //NOPMD
 	                        }
 	                        break;
 	                    
 	                    case (243) :
 	                        log.append("QUERY (WSF)\n");
-	                        len = (input.read() * 256) + input.read() - 2;
+	                        len = (this.input.read() * 256) + this.input.read() - 2;
 	                        log.append("len = "+len+"\n");
 	                        for (int i=0; i<len; i++) {
-	                            log.append(String.format("%2X", input.read()));
+	                            log.append(String.format("%2X", this.input.read()));
 	                        }
 	                        log.append("\n");
 	                        answerToWSF(log);
@@ -591,13 +606,13 @@ public class ConnectionHandler {
 	                break;
 	                
 	            case (17) :
-	                screenY = input.read();
-	                screenX = input.read();
-	                log.append("<= MOVE TO ["+screenY+";"+screenX+"] '"+moveToSend+"' \n");
-					if (moveToSend && (textSend == 1)) {
-						textSend = 0;
+	            	this.screenY = this.input.read();
+	            	this.screenX = this.input.read();
+	                log.append("<= MOVE TO ["+this.screenY+";"+this.screenX+"] '"+this.moveToSend+"' \n");
+					if (this.moveToSend && (this.textSend == 1)) {
+						this.textSend = 0;
 					}
-					moveToSend = true;
+					this.moveToSend = true;
 	                break;
 	                
 	            case (29) :
@@ -649,8 +664,8 @@ public class ConnectionHandler {
 	                if ((ch >= 0x20) && (ch<40)) {
 	                	this.col = CharacterColor.findColor(ch);
 	                    log.append("<= COLOR "+this.col.colorFont.htmlCode+"\n");
-						if (textSend == 1) {
-							textSend = 0;
+						if (this.textSend == 1) {
+							this.textSend = 0;
 						}
 	                } else {
 	                    treatData(ch, log);
@@ -658,8 +673,8 @@ public class ConnectionHandler {
 	        }
 
 	    }
-		if (moveToSend) {
-			moveToSend = false;
+		if (this.moveToSend) {
+			this.moveToSend = false;
 		}
 
 	}
@@ -678,8 +693,8 @@ public class ConnectionHandler {
 	    LOG.info(log.toString());
 	}
 
-	private void sendMessage(final String type, final String mess, final StringBuilder log) {
-	    if (!screenDesc.getQueues().containsKey(type)) {
+	private void sendMessage(final String type, final String mess, final StringBuilder log) throws IOException {
+/*	    if (!screenDesc.getQueues().containsKey(type)) {
 	        final QueueProperties queue = new QueueProperties();
 	        queue.setMessage(ConstString.EMPTY);
 	        queue.setLog(ConstString.EMPTY);
@@ -688,20 +703,20 @@ public class ConnectionHandler {
 	        this.screenDesc.getQueues().put(type, queue);
 	    }
 	    final int num = tn5250["connexion"]["queue"]["open"][type];
-	    if (num == tn5250["connexion"]["queue"]["current"]) {
+	    if (num == tn5250["connexion"]["queue"]["current"]) {*/
 	    	for (char ch : mess.toCharArray()) {
 	    		output.write(ch);
 	    	}
 	    	output.flush();
 	        //echo log;
-	    }
+/*	    }
 	    final QueueProperties queue = this.screenDesc.getQueues().get(type);
 	    queue.setMessage(queue.getMessage() + mess);
-	    queue.setLog(queue.getLog() + log);
+	    queue.setLog(queue.getLog() + log);*/
 	}
 
 	private boolean closeMessageQueue(final String type) {
-	    
+/*	    
 	    if (!screenDesc.getQueues().containsKey(type)) {
 	        return false;
 	    }
@@ -726,7 +741,7 @@ public class ConnectionHandler {
 	                loop = false;
 	            }
 	        } while (loop);
-	    }
+	    }*/
 	    return true;
 	}
 
