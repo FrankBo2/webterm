@@ -30,7 +30,8 @@
         </action>
 
         <action name="create" class="org.webterm.ui.ConnectionCreateAction" >
-            <result name="SUCCESS">/includes/connection/create.jsp</result>
+            <result name="ERROR">/includes/connection/create.jsp</result>
+            <result name="SUCCESS">/includes/screen.jsp</result>
         </action>
 
     </package>

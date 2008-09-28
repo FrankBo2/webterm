@@ -18,7 +18,16 @@
  */
 package org.webterm.ui;
 
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.webterm.core.ConstString;
 import org.webterm.core.ConstStruts;
+import org.webterm.service.ConnectionManagementService;
+import org.webterm.service.forms.AbstractServiceResult.Status;
+import org.webterm.service.forms.query.CreateConnectionRequest;
+import org.webterm.service.forms.result.SimpleConnectionResult;
+import org.webterm.term.TermFactory;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -32,6 +41,12 @@ public final class ConnectionCreateAction extends ActionSupport {
 	/** Class serial */
 	private static final long serialVersionUID = 1L;
 
+	/** True if the initialization screen is required */
+	private String init = ConstString.EMPTY;
+	
+	/** request form */
+	transient private final CreateConnectionRequest form = new CreateConnectionRequest();
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -39,6 +54,58 @@ public final class ConnectionCreateAction extends ActionSupport {
 	 */
 	@Override
 	public String execute() {
-		return ConstStruts.TARGET_SUCCESS;
+		final String result;
+		if (StringUtils.isNotEmpty(this.init)) {
+			result = ConstStruts.TARGET_ERROR;
+		} else {
+			//set default server port
+			if (this.form.getServerPort() < 1) {
+				this.form.setServerPort(23);
+			}
+			final SimpleConnectionResult results = new SimpleConnectionResult();
+			ConnectionManagementService.getInstance().createTerm(this.form, results);
+			if (results.getStatus() == Status.OK) {
+				results.getProcess().openConnection();
+			}
+			result = ConstStruts.TARGET_SUCCESS;			
+		}
+		return result;
 	}
+
+	/**
+	 * Getter
+	 * 
+	 * @return the initialization string
+	 */
+	public String getInit() {
+		return this.init;
+	}
+
+	/**
+	 * Setter
+	 * 
+	 * @param init the initialization to set
+	 */
+	public void setInit(final String init) {
+		this.init = init;
+	}
+	
+	/**
+	 * Getter
+	 * 
+	 * @return Form
+	 */
+	public CreateConnectionRequest getForm() {
+		return this.form;
+	}
+	
+	/**
+	 * Getter
+	 * 
+	 * @return supported terminal type list
+	 */
+	public Set<String> getTermTypeList() {
+		return TermFactory.getInstance().getTermType();
+	}
+	
 }

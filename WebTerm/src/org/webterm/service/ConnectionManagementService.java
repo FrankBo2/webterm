@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.webterm.connections.ConnectionDescription;
 import org.webterm.core.ConstMessages;
 import org.webterm.service.forms.AbstractServiceRequest;
 import org.webterm.service.forms.AbstractServiceResult.Status;
@@ -59,7 +60,7 @@ public final class ConnectionManagementService {
 	}
 
 	/** list of all process */
-	private transient final Map<Long, AbstractTermDescription> processList = new HashMap<Long, AbstractTermDescription>();
+	private transient final Map<Long, ConnectionDescription> processList = new HashMap<Long, ConnectionDescription>();
 
 	/**
 	 * Method to get the list of connections from the user.
@@ -74,8 +75,8 @@ public final class ConnectionManagementService {
 				result.setStatus(Status.ERROR);
 				result.setMessage(ConstMessages.ERR_NO_PARAMETER_USR_PWD);
 			} else {
-				for (final AbstractTermDescription process : this.processList.values()) {
-					if (userName.equalsIgnoreCase(process.getOwner())){
+				for (final ConnectionDescription process : this.processList.values()) {
+					if (userName.equalsIgnoreCase(process.getTerm().getOwner())){
 						result.getProcessList().add(process);
 					}
 				}
@@ -98,11 +99,11 @@ public final class ConnectionManagementService {
 				result.setMessage(ConstMessages.ERR_UNSUPPORTED_TYPE);
 			} else {
 				final Long pid = process.getPid();
-				this.processList.put(pid, process);
-				process.getConnectionDescription().setServerName(params.getServerName());
-				process.getConnectionDescription().setPort(params.getServerPort());
-				// process.getConnectionDescription().
-				result.setProcess(process);
+				final ConnectionDescription connectionDescription = new ConnectionDescription(process);
+				connectionDescription.setServerName(params.getServerName());
+				connectionDescription.setPort(params.getServerPort());
+				this.processList.put(pid, connectionDescription);
+				result.setProcess(connectionDescription);
 				result.setMessage(ConstMessages.OK_CREATED);
 			}
 		}
@@ -117,7 +118,7 @@ public final class ConnectionManagementService {
 	public void closeConnexion(final SimpleConnectionRequest params, final SimpleConnectionResult result) {
 		getConnection(params, result);
 		if (result.getStatus() == Status.OK) {
-			final AbstractTermDescription process = result.getProcess();
+			final ConnectionDescription process = result.getProcess();
 			if (process == null) {
 				result.setStatus(Status.ERROR);
 				result.setMessage(ConstMessages.ERR_NO_PROCESS);
@@ -125,7 +126,7 @@ public final class ConnectionManagementService {
 				// FIXME close the connection
 				// result = $this->processList[$pid]->close();
 				if (result.getStatus() == Status.OK) {
-					this.processList.remove(process.getPid());
+					this.processList.remove(process.getTerm().getPid());
 				}
 			}
 		}
@@ -145,14 +146,14 @@ public final class ConnectionManagementService {
 				result.setStatus(Status.ERROR);
 				result.setMessage(ConstMessages.ERR_NO_PARAMETER_PID);
 			} else {
-				final AbstractTermDescription term = this.processList.get(pid);
-				if (term == null) {
+				final ConnectionDescription connectionDescription = this.processList.get(pid);
+				if (connectionDescription == null) {
 					result.setStatus(Status.ERROR);
 					result.setMessage(ConstMessages.ERR_NO_PROCESS);
 				} else {
 					final String userName = params.getLogin();
-					if (term.getOwner().equalsIgnoreCase(userName)) {
-						result.setProcess(term);
+					if (connectionDescription.getTerm().getOwner().equalsIgnoreCase(userName)) {
+						result.setProcess(connectionDescription);
 					} else {
 						result.setStatus(Status.ERROR);
 						result.setMessage(ConstMessages.ERR_CONN_NOT_YOURS);
@@ -171,7 +172,7 @@ public final class ConnectionManagementService {
 	public void closeProcess(final SimpleConnectionRequest params, final SimpleConnectionResult result) {
 		getConnection(params, result);
 		if (result.getStatus() == Status.OK) {
-			final AbstractTermDescription process = result.getProcess();
+			final ConnectionDescription process = result.getProcess();
 			if (process == null) {
 				result.setStatus(Status.ERROR);
 				result.setMessage(ConstMessages.ERR_NO_PROCESS);
@@ -179,7 +180,7 @@ public final class ConnectionManagementService {
 				// FIXME close the process
 				// result = $this->processList[$pid]->close();
 				if (result.getStatus() == Status.OK) {
-					this.processList.remove(process.getPid());
+					this.processList.remove(process.getTerm().getPid());
 				}
 			}
 		}
@@ -194,7 +195,7 @@ public final class ConnectionManagementService {
 	public void getScreen(final SimpleConnectionRequest params, final SimpleConnectionResult result) {
 		getConnection(params, result);
 		if (result.getStatus() == Status.OK) {
-			final AbstractTermDescription process = result.getProcess();
+			final ConnectionDescription process = result.getProcess();
 			if (process == null) {
 				result.setStatus(Status.ERROR);
 				result.setMessage(ConstMessages.ERR_NO_PROCESS);
@@ -202,7 +203,7 @@ public final class ConnectionManagementService {
 				// FIXME get the screen
 				// result = $this->processList[$pid]->close();
 				if (result.getStatus() == Status.OK) {
-					this.processList.remove(process.getPid());
+					this.processList.remove(process.getTerm().getPid());
 				}
 			}
 		}

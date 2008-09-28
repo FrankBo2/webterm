@@ -21,6 +21,8 @@ package org.webterm.connections;
 import java.io.IOException;
 import java.net.Socket;
 
+import org.webterm.term.AbstractTermDescription;
+
 /**
  * Class for connection description
  * 
@@ -42,7 +44,31 @@ public final class ConnectionDescription {
 
 	/** Socket for the host connection. */
 	private transient Socket socket;
-
+	
+	/** terminal description of the connection*/
+	transient private final AbstractTermDescription term;
+	
+	/** Connection handler */
+	transient private ConnectionHandler connectionHandler = null;
+ 
+	/**
+	 * Constructor
+	 * 
+	 * @param term Terminal.
+	 */
+	public ConnectionDescription(final AbstractTermDescription term) {
+		this.term = term;
+	}
+	
+	/**
+	 * Getter
+	 * 
+	 * @return Terminal description
+	 */
+	public AbstractTermDescription getTerm() {
+		return this.term;
+	}
+	
 	/**
 	 * Getter
 	 * 
@@ -118,17 +144,19 @@ public final class ConnectionDescription {
 	/**
 	 * Open a connection with the host.
 	 * 
-	 * @return True if the connection is open succesfully with the host.
+	 * @return True if the connection is open successfully with the host.
 	 */
 	public boolean openConnection() {
 		synchronized (this.connectionStatus) {
-			boolean result = false; // NOPMD - init result
+			boolean result = false; // NOPMD - initialization result
 			if (this.connectionStatus == EnumConnectionStatus.NOT_CREATED || this.connectionStatus == EnumConnectionStatus.CLOSED) {
 				this.connectionStatus = EnumConnectionStatus.INITIALISATION;
 				try {
 					this.socket = new Socket(this.serverName, this.port);
 					result = true;
 					this.connectionStatus = EnumConnectionStatus.OPEN;
+					this.connectionHandler = new ConnectionHandler(this.term, this.socket);
+					this.connectionHandler.readScreen();
 				} catch (IOException ex) {
 					// FIXME
 					this.connectionStatus = EnumConnectionStatus.NOT_CREATED;

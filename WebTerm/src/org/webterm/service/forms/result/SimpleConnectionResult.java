@@ -18,8 +18,8 @@
  */
 package org.webterm.service.forms.result;
 
+import org.webterm.connections.ConnectionDescription;
 import org.webterm.service.forms.AbstractServiceResult;
-import org.webterm.term.AbstractTermDescription;
 
 /**
  * Simple result form for process request.
@@ -29,14 +29,14 @@ import org.webterm.term.AbstractTermDescription;
 public class SimpleConnectionResult extends AbstractServiceResult {
 
 	/** requested process */
-	private AbstractTermDescription process;
+	private ConnectionDescription process;
 
 	/**
 	 * Getter
 	 * 
 	 * @return the process
 	 */
-	public AbstractTermDescription getProcess() {
+	public ConnectionDescription getProcess() {
 		return this.process;
 	}
 
@@ -45,7 +45,7 @@ public class SimpleConnectionResult extends AbstractServiceResult {
 	 * 
 	 * @param process the process to set
 	 */
-	public void setProcess(final AbstractTermDescription process) {
+	public void setProcess(final ConnectionDescription process) {
 		this.process = process;
 	}
 

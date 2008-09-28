@@ -34,7 +34,9 @@
 			</td>
 			<td class="topTableTdUser"><wt:userName /></td>
 			<td class="topTableTdTools">
-				<s:url id="createConnUrl" action="create" namespace="/connection" />
+				<s:url id="createConnUrl" action="create" namespace="/connection">
+					<s:param name="init" value="true"/>
+				</s:url>
 				<s:a href="%{createConnUrl}" theme="ajax" targets="pageDiv" showLoadingText="false">
 					<s:text name="application.top.createConnection" />
 				</s:a>

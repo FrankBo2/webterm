@@ -18,7 +18,6 @@
  */
 package org.webterm.term;
 
-import org.webterm.connections.ConnectionDescription;
 import org.webterm.service.ConnectionPidHelper;
 
 /**
@@ -37,9 +36,6 @@ public abstract class AbstractTermDescription { // NOPMD - no abstract method
 	/** Name of the Terminal. */
 	private transient final String termName;
 
-	/** Description of the term connection. */
-	private transient final ConnectionDescription connDescription = new ConnectionDescription();
-
 	/**
 	 * Getter
 	 * 
@@ -55,15 +51,6 @@ public abstract class AbstractTermDescription { // NOPMD - no abstract method
 	 * @return Physical term type (for connection parameter)
 	 */
 	public abstract String getPhysicalTermType();
-
-	/**
-	 * Getter
-	 * 
-	 * @return The Connection description.
-	 */
-	public final ConnectionDescription getConnectionDescription() {
-		return this.connDescription;
-	}
 
 	/**
 	 * Constructor

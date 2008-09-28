@@ -34,7 +34,7 @@ public class CreateConnectionRequest extends AbstractServiceRequest {
 	private String serverName;
 
 	/** port on which open the connection */
-	private int serverPort;
+	private int serverPort = -1;
 
 	/**
 	 * Getter
