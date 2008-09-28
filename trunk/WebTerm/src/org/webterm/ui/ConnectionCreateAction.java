@@ -21,9 +21,12 @@ package org.webterm.ui;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.webterm.core.ConstString;
 import org.webterm.core.ConstStruts;
+import org.webterm.core.UserDescription;
 import org.webterm.service.ConnectionManagementService;
+import org.webterm.service.SessionService;
 import org.webterm.service.forms.AbstractServiceResult.Status;
 import org.webterm.service.forms.query.CreateConnectionRequest;
 import org.webterm.service.forms.result.SimpleConnectionResult;
@@ -55,19 +58,27 @@ public final class ConnectionCreateAction extends ActionSupport {
 	@Override
 	public String execute() {
 		final String result;
-		if (StringUtils.isNotEmpty(this.init)) {
-			result = ConstStruts.TARGET_ERROR;
+		final UserDescription user = SessionService.getInstance().getUserDescription(ServletActionContext.getRequest());
+		if(user == null) {
+			result = null;
 		} else {
-			//set default server port
-			if (this.form.getServerPort() < 1) {
-				this.form.setServerPort(23);
+			if (StringUtils.isNotEmpty(this.init)) {
+				result = ConstStruts.TARGET_ERROR;
+			} else {
+				//set default server port
+				if (this.form.getServerPort() < 1) {
+					this.form.setServerPort(23);
+				}
+				//set user description
+				this.form.setLogin(user.getLogin());
+				//open connection
+				final SimpleConnectionResult results = new SimpleConnectionResult();
+				ConnectionManagementService.getInstance().createTerm(this.form, results);
+				if (results.getStatus() == Status.OK) {
+					results.getProcess().openConnection();
+				}
+				result = ConstStruts.TARGET_SUCCESS;			
 			}
-			final SimpleConnectionResult results = new SimpleConnectionResult();
-			ConnectionManagementService.getInstance().createTerm(this.form, results);
-			if (results.getStatus() == Status.OK) {
-				results.getProcess().openConnection();
-			}
-			result = ConstStruts.TARGET_SUCCESS;			
 		}
 		return result;
 	}

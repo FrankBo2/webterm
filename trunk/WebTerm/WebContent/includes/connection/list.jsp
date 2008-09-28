@@ -33,8 +33,8 @@
 					<s:url id="connUrl" action="display" namespace="/connection">
 						<s:param name="id" value="id" />
 					</s:url>
-					<s:a href="%{connUrl}" theme="ajax" targets="mainDiv">
-						<s:property value="serverName"/>:<s:property value="port"/>[<s:property value="termName" />]
+					<s:a href="%{connUrl}" theme="ajax" targets="pageDiv">
+						<s:property value="serverName"/>:<s:property value="port"/>[<s:property value="term.termName" />]
 					</s:a>
 				</td>
 			</tr>
