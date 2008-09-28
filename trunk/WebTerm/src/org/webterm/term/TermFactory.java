@@ -20,6 +20,7 @@ package org.webterm.term;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.webterm.term.ascii.ibm3164.Ibm3164TermCreator;
 import org.webterm.term.ebcdic.ibm5250.Ibm5250TermCreator;
@@ -65,13 +66,22 @@ public final class TermFactory {
 	}
 
 	/**
-	 * Creation methode for term description.
+	 * Creation method for term description.
 	 * 
 	 * @param type Terminal type.
-	 * @return A brand new instance of the terminal description if <i>type</i> is found in <i>creators</i>, null otherwidth.
+	 * @return A brand new instance of the terminal description if <i>type</i> is found in <i>creators</i>, null otherwise.
 	 */
 	public AbstractTermDescription create(final String type) {
 		final ITermCreator<? extends AbstractTermDescription> creator = this.creators.get(type);
 		return creator == null ? null : creator.newInstance();
+	}
+	
+	/**
+	 * Getter
+	 * 
+	 * @return Set of supported term type.
+	 */
+	public Set<String> getTermType() {
+		return this.creators.keySet();
 	}
 }

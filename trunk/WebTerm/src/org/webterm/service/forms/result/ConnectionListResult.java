@@ -21,8 +21,8 @@ package org.webterm.service.forms.result;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.webterm.connections.ConnectionDescription;
 import org.webterm.service.forms.AbstractServiceResult;
-import org.webterm.term.AbstractTermDescription;
 
 /**
  * Form for the getConnectionList service request.
@@ -32,14 +32,14 @@ import org.webterm.term.AbstractTermDescription;
 public class ConnectionListResult extends AbstractServiceResult {
 
 	/** the list of process */
-	private transient final List<AbstractTermDescription> processList = new ArrayList<AbstractTermDescription>();
+	private transient final List<ConnectionDescription> processList = new ArrayList<ConnectionDescription>();
 
 	/**
 	 * Getter
 	 * 
 	 * @return the processList
 	 */
-	public List<AbstractTermDescription> getProcessList() {
+	public List<ConnectionDescription> getProcessList() {
 		return this.processList;
 	} 
 }

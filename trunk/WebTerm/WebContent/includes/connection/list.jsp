@@ -34,7 +34,7 @@
 						<s:param name="id" value="id" />
 					</s:url>
 					<s:a href="%{connUrl}" theme="ajax" targets="mainDiv">
-						<s:property value="connDescription.serverName"/>:<s:property value="connDescription.port"/>[<s:property value="termName" />]
+						<s:property value="serverName"/>:<s:property value="port"/>[<s:property value="termName" />]
 					</s:a>
 				</td>
 			</tr>

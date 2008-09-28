@@ -22,4 +22,12 @@
 
 <wt:checkUser/>
 
-create
+<center><s:form action="create" namespace="/connection">
+	<tr>
+		<td colspan="2"><s:actionerror /> <s:fielderror /></td>
+	</tr>
+	<s:textfield key="form.serverName" />
+	<s:select key="form.type" list="termTypeList" />
+	<s:submit key="form.submit" theme="ajax" targets="pageDiv" showLoadingText="false" />
+</s:form></center>
+
