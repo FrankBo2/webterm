@@ -615,8 +615,8 @@ public class ConnectionHandler {
 	                break;
 	                
 	            case (17) :
-	            	this.screenY = this.input.read();
-	            	this.screenX = this.input.read();
+	            	this.screenY = this.input.read() - 1;
+	            	this.screenX = this.input.read() - 1;
 	                log.append("<= MOVE TO ["+this.screenY+";"+this.screenX+"] '"+this.moveToSend+"' \n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					if (this.moveToSend && (this.textSend == 1)) {
 						this.textSend = 0;

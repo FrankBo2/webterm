@@ -48,7 +48,9 @@ public class ConnectionListAction extends ActionSupport {
 	@Override
 	public String execute() {
 		final UserDescription user = SessionService.getInstance().getUserDescription(ServletActionContext.getRequest());
-		ConnectionManagementService.getInstance().getConnexionList(user, this.result);
+		if(user != null) {
+			ConnectionManagementService.getInstance().getConnexionList(user, this.result);
+		}
 		return ConstStruts.TARGET_SUCCESS;
 	}
 

@@ -69,19 +69,18 @@ public final class ConnectionManagementService {
 	 * @param result Request result
 	 */
 	public void getConnexionList(final AbstractServiceRequest params, final ConnectionListResult result) {
-		if (result.getStatus() == Status.OK) {
-			final String userName = params.getLogin();
-			if (StringUtils.isEmpty(userName)) {
-				result.setStatus(Status.ERROR);
-				result.setMessage(ConstMessages.ERR_NO_PARAMETER_USR_PWD);
-			} else {
-				for (final ConnectionDescription process : this.processList.values()) {
-					if (userName.equalsIgnoreCase(process.getTerm().getOwner())){
-						result.getProcessList().add(process);
-					}
+		final String userName = params.getLogin();
+		if (StringUtils.isEmpty(userName)) {
+			result.setStatus(Status.ERROR);
+			result.setMessage(ConstMessages.ERR_NO_PARAMETER_USR_PWD);
+		} else {
+			result.setStatus(Status.OK);
+			for (final ConnectionDescription process : this.processList.values()) {
+				if (userName.equalsIgnoreCase(process.getTerm().getOwner())){
+					result.getProcessList().add(process);
 				}
-				result.setMessage(ConstMessages.OK_GENERIC);
 			}
+			result.setMessage(ConstMessages.OK_GENERIC);
 		}
 	}
 
@@ -92,20 +91,20 @@ public final class ConnectionManagementService {
 	 * @param result Request result
 	 */
 	public void createTerm(final CreateConnectionRequest params, final SimpleConnectionResult result) {
-		if (result.getStatus() == Status.OK) {
-			final AbstractTermDescription process = TermFactory.getInstance().create(params.getType());
-			if (process == null) {
-				result.setStatus(Status.ERROR);
-				result.setMessage(ConstMessages.ERR_UNSUPPORTED_TYPE);
-			} else {
-				final Long pid = process.getPid();
-				final ConnectionDescription connectionDescription = new ConnectionDescription(process);
-				connectionDescription.setServerName(params.getServerName());
-				connectionDescription.setPort(params.getServerPort());
-				this.processList.put(pid, connectionDescription);
-				result.setProcess(connectionDescription);
-				result.setMessage(ConstMessages.OK_CREATED);
-			}
+		final AbstractTermDescription process = TermFactory.getInstance().create(params.getType());
+		if (process == null) {
+			result.setStatus(Status.ERROR);
+			result.setMessage(ConstMessages.ERR_UNSUPPORTED_TYPE);
+		} else {
+			result.setStatus(Status.OK);
+			final Long pid = process.getPid();
+			process.setOwner(params.getLogin());
+			final ConnectionDescription connectionDescription = new ConnectionDescription(process);
+			connectionDescription.setServerName(params.getServerName());
+			connectionDescription.setPort(params.getServerPort());
+			this.processList.put(pid, connectionDescription);
+			result.setProcess(connectionDescription);
+			result.setMessage(ConstMessages.OK_CREATED);
 		}
 	}
 
