@@ -241,7 +241,7 @@ public final class LdapAuthentication implements IAuthentication {
 	/**
 	 * Attribute reader
 	 * 
-	 * @param username
+	 * @param username User name
 	 * @return Attribute password associated with the login.
 	 */
 	public Attribute fetch(final String username) {

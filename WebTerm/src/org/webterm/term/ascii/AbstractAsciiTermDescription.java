@@ -30,7 +30,7 @@ public abstract class AbstractAsciiTermDescription extends AbstractTermDescripti
 	/**
 	 * Constructor
 	 * 
-	 * @param termName
+	 * @param termName Terminal name
 	 */
 	public AbstractAsciiTermDescription(final String termName) {
 		super(termName);

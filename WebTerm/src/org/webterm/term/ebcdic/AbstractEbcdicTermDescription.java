@@ -33,7 +33,7 @@ public abstract class AbstractEbcdicTermDescription extends AbstractTermDescript
 	private ICharMap charMap = CharMaps.getInstance().getDefaultCharMap();
 
 	/**
-	 * @param termName
+	 * @param termName Terminal name
 	 */
 	public AbstractEbcdicTermDescription(final String termName) {
 		super(termName);

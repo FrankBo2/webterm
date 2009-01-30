@@ -60,7 +60,6 @@ public final class SessionService {
 	 * @param request HTTP request
 	 * @return UserDescription
 	 */
-	@SuppressWarnings("unchecked")
 	public UserDescription getUserDescription(final HttpServletRequest request) {
 		final HttpSession session = request.getSession();
 		UserDescription user = null; // NOPMD - init
@@ -80,7 +79,6 @@ public final class SessionService {
 	 * @param request HTTP request
 	 * @param user UserDescription
 	 */
-	@SuppressWarnings("unchecked")
 	public void setUserDescription(final HttpServletRequest request, final UserDescription user) {
 		final HttpSession session = request.getSession();
 		if (session != null) {

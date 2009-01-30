@@ -106,7 +106,7 @@ public class ConnectionHandler {
 	 * 
 	 * @param term Terminal description
 	 * @param socket Socket
-	 * @throws IOException 
+	 * @throws IOException I/O error
 	 */
 	public ConnectionHandler (final AbstractTermDescription term, final Socket socket) throws IOException {
 		this.term = term;
@@ -172,8 +172,8 @@ public class ConnectionHandler {
 	/**
 	 * Treatment method
 	 * 
-	 * @param serverCh
-	 * @param log
+	 * @param serverCh Char from server side
+	 * @param log Logger
 	 */
 	private void treatData(final char serverCh, final StringBuilder log) {
 	    final CharacterDescription cd = this.screenDesc.get(this.screenX, this.screenY);
@@ -205,9 +205,9 @@ public class ConnectionHandler {
 	/**
 	 * response method
 	 * 
-	 * @param query
-	 * @param log
-	 * @throws IOException
+	 * @param query Query char
+	 * @param log Logger
+	 * @throws IOException I/O error
 	 */
 	private void answerIAC(final char query, final StringBuilder log) throws IOException {
 	    log.append("<= IAC "); //$NON-NLS-1$
@@ -491,7 +491,7 @@ public class ConnectionHandler {
 	 * Method to read from the server. The display screen is modified according to reed data.
 	 * 
 	 * @param log Log stringBuilder.
-	 * @throws IOException 
+	 * @throws IOException I/O error 
 	 */
 	private void read(final StringBuilder log) throws IOException {
 	    boolean nego = true;
@@ -691,7 +691,7 @@ public class ConnectionHandler {
 	/**
 	 * Method to read the screen from the socket. 
 	 * 
-	 * @throws IOException 
+	 * @throws IOException I/O error 
 	 */
 	public void readScreen() throws IOException {
 		final StringBuilder log = new StringBuilder();
@@ -707,10 +707,10 @@ public class ConnectionHandler {
 	/**
 	 * Sending message method
 	 * 
-	 * @param type
-	 * @param mess
-	 * @param log
-	 * @throws IOException
+	 * @param type Type
+	 * @param mess Message
+	 * @param log Logger
+	 * @throws IOException I/O error
 	 */
 	private void sendMessage(final String type, final String mess, final StringBuilder log) throws IOException {
 /*	    if (!screenDesc.getQueues().containsKey(type)) {
@@ -774,10 +774,10 @@ public class ConnectionHandler {
 	/**
 	 * Send message to the host
 	 * 
-	 * @param text
-	 * @param opcode
-	 * @param log
-	 * @throws IOException
+	 * @param text Test
+	 * @param opcode Operation code
+	 * @param log Logger
+	 * @throws IOException I/O error
 	 */
 	private void sendToHost(final String text, final String opcode, final StringBuilder log) throws IOException {
 	    final int len = text.length() + 10;
@@ -803,8 +803,8 @@ public class ConnectionHandler {
 	/**
 	 * Answer to server WSF request
 	 * 
-	 * @param log
-	 * @throws IOException
+	 * @param log Logger
+	 * @throws IOException I/O error
 	 */
 	private void answerToWSF(final StringBuilder log) throws IOException{
 
