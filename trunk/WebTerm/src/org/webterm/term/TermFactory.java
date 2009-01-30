@@ -50,7 +50,7 @@ public final class TermFactory {
 	/**
 	 * Register methode for creators.
 	 * 
-	 * @param creator
+	 * @param creator Creator
 	 */
 	private void register(final ITermCreator<? extends AbstractTermDescription> creator) {
 		this.creators.put(creator.getTermType(), creator);

@@ -34,7 +34,7 @@ public final class Runner {
 	/**
 	 * Main method
 	 * 
-	 * @param args
+	 * @param args Command line arguments
 	 */
 	public static void main(final String[] args) {
 		final Runner run = new Runner();

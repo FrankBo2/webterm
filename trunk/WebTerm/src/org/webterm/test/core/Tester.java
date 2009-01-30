@@ -30,7 +30,7 @@ public final class Tester {
 	/**
 	 * Method for test list.
 	 * 
-	 * @param list
+	 * @param list List
 	 */
 	public static void completeTestClasses(final List<Class<?>> list) {
 		org.webterm.test.core.ebcdic.Tester.completeTestClasses(list);
