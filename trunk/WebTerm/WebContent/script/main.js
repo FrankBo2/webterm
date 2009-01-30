@@ -58,7 +58,7 @@ function resizeWindow() {
 	}
 	
 	if (js__page_div) {
-		js__page_div.style.width = (screenWidth - 155) + "px";
+		js__page_div.style.width = (screenWidth - 205) + "px";
 		js__page_div.style.height = (screenHeight - 40) + "px";
 	}
 	
