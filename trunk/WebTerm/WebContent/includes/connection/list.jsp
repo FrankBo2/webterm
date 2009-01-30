@@ -19,6 +19,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://webterm.org/tags-webterm" prefix="wt"%>
 <%@ taglib uri="/struts-tags" prefix="s"%>
+<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <wt:checkUser/>
 
@@ -33,9 +34,9 @@
 					<s:url id="connUrl" action="display" namespace="/connection">
 						<s:param name="id" value="id" />
 					</s:url>
-					<s:a href="%{connUrl}" theme="ajax" targets="pageDiv">
+					<sx:a href="%{connUrl}" targets="pageDiv">
 						<s:property value="serverName"/>:<s:property value="port"/>[<s:property value="term.termName" />]
-					</s:a>
+					</sx:a>
 				</td>
 			</tr>
 		</s:iterator>

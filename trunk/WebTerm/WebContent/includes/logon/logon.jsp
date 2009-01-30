@@ -18,6 +18,7 @@
  --%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="/struts-tags" prefix="s"%>
+<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <center><s:form action="execute" namespace="/logon">
 	<tr>
@@ -25,6 +26,6 @@
 	</tr>
 	<s:textfield key="logon.login" />
 	<s:password key="logon.password" />
-	<s:submit key="logon.submit" theme="ajax" targets="mainDiv" showLoadingText="false" />
+	<sx:submit key="logon.submit" targets="mainDiv" showLoadingText="false" />
 </s:form></center>
 

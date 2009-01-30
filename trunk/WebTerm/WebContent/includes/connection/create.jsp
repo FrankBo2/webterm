@@ -19,6 +19,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://webterm.org/tags-webterm" prefix="wt"%>
 <%@ taglib uri="/struts-tags" prefix="s"%>
+<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <wt:checkUser/>
 
@@ -28,6 +29,6 @@
 	</tr>
 	<s:textfield key="form.serverName" />
 	<s:select key="form.type" list="termTypeList" />
-	<s:submit key="form.submit" theme="ajax" targets="pageDiv" showLoadingText="false" />
+	<sx:submit key="form.submit" targets="pageDiv" showLoadingText="false" />
 </s:form></center>
 
