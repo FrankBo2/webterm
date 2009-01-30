@@ -27,8 +27,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title><wt:title/></title>
-	<s:head theme="ajax" />
-    <sx:head debug="false" cache="false" compressed="false" />
+    <sx:head debug="true" cache="false" compressed="false" parseContent="true"/>
 	<link href="<%=request.getContextPath() %>/theme/<%=ConstConfiguration.APPLICATION_THEME %>/main.css" rel="stylesheet" type="text/css"/>
 	<%-- main script --%>  
 	<script type="text/javascript" src="<s:url value="/script/main.js"/>" ></script>
@@ -42,7 +41,7 @@
 	<wt:ifUserNotConnected>
 		<s:include value="/includes/logon/logon.jsp"/>
 	</wt:ifUserNotConnected>
-</s:div>
+</sx:div>
 
 </body>
 </html>
