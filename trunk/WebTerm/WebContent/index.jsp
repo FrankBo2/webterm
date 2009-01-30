@@ -18,7 +18,7 @@
  --%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://webterm.org/tags-webterm" prefix="wt"%>
-<%@ taglib uri="/struts-tags"  prefix="s" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ page import="org.webterm.configuration.ConstConfiguration" %>
 <% request.getSession(true); %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
